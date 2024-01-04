@@ -1,0 +1,26 @@
+name: initial_app
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment:
+  sdk: ">=3.2.3 <4.0.0"
+
+dependencies:
+  cupertino_icons: ^1.0.2
+  get: 4.6.6
+  flutter:
+    sdk: flutter
+  lottie: ^2.7.0
+  google_fonts: ^6.1.0
+
+dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  assets:
+    - assets/images/
+    - assets/fonts/
+    - assets/lotties/
+  uses-material-design: true
