@@ -14,6 +14,7 @@ class SignInView extends GetView<SignInController> {
   const SignInView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    Get.put(SignInController());
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -26,79 +27,82 @@ class SignInView extends GetView<SignInController> {
                 color: Color(0xFFEEEEEE),
               ),
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Text(
-                      "Welcome Back!",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 50,
-                        fontFamily: GoogleFonts.ole().fontFamily,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 250,
-                      child: Lottie.asset("assets/lotties/LazyDogs.json"),
-                    ),
-                    CustomTextfield(
-                      controller: TextEditingController(),
-                      label: "Email",
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextfield(
-                      controller: TextEditingController(),
-                      label: "Password",
-                      isPassword: true,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Text("Forgot Password?"),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    CustomButton(
-                      label: "Sign In",
-                      onPressed: () {
-                        Get.to(() => MainView());
-                      },
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Don't have an account? ",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                          ),
+                child: Form(
+                  key: controller.signInFormKey,
+                  child: Column(
+                    children: [
+                      Text(
+                        "Welcome Back!",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 50,
+                          fontFamily: GoogleFonts.ole().fontFamily,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            Get.to(() => SignUpView());
-                          },
-                          child: Text(
-                            "Sign Up",
+                      ),
+                      SizedBox(
+                        width: 250,
+                        child: Lottie.asset("assets/lotties/LazyDogs.json"),
+                      ),
+                      CustomTextfield(
+                        controller: controller.emailController,
+                        label: "Email",
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextfield(
+                        controller: controller.passwordController,
+                        label: "Password",
+                        isPassword: true,
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: Text("Forgot Password?"),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      CustomButton(
+                        label: "Sign In",
+                        onPressed: () {
+                          controller.onLogin();
+                        },
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Don't have an account? ",
                             style: TextStyle(
-                              color: const Color(0xFFFFA500),
+                              color: Colors.black,
                               fontSize: 15,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          GestureDetector(
+                            onTap: () {
+                              Get.to(() => SignUpView());
+                            },
+                            child: Text(
+                              "Sign Up",
+                              style: TextStyle(
+                                color: const Color(0xFFFFA500),
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

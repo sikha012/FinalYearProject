@@ -11,6 +11,7 @@ class SignUpView extends GetView<SignUpController> {
   const SignUpView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    Get.put(SignUpController());
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -23,92 +24,95 @@ class SignUpView extends GetView<SignUpController> {
                 color: Color(0xFFEEEEEE),
               ),
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Text(
-                      "Create an Account",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 50,
-                        fontFamily: GoogleFonts.ole().fontFamily,
-                      ),
-                    ),
-                    CustomTextfield(
-                      controller: TextEditingController(),
-                      label: "Username",
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextfield(
-                      controller: TextEditingController(),
-                      label: "Email",
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextfield(
-                      controller: TextEditingController(),
-                      label: "Contact number",
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextfield(
-                      controller: TextEditingController(),
-                      label: "Address",
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextfield(
-                      controller: TextEditingController(),
-                      label: "Password",
-                      isPassword: true,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextfield(
-                      controller: TextEditingController(),
-                      label: "Re-type Password",
-                      isPassword: true,
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    CustomButton(
-                      label: "Sign Up",
-                      onPressed: () {},
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Already have an account? ",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                          ),
+                child: Form(
+                  key: controller.signUpFormKey,
+                  child: Column(
+                    children: [
+                      Text(
+                        "Create an Account",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 50,
+                          fontFamily: GoogleFonts.ole().fontFamily,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            Get.back();
-                          },
-                          child: Text(
-                            "Sign In",
+                      ),
+                      CustomTextfield(
+                        controller: controller.userNameController,
+                        label: "Username",
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextfield(
+                        controller: controller.emailController,
+                        label: "Email",
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextfield(
+                        controller: controller.contactController,
+                        label: "Contact number",
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextfield(
+                        controller: controller.addressController,
+                        label: "Address",
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextfield(
+                        controller: controller.passwordController,
+                        label: "Password",
+                        isPassword: true,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextfield(
+                        controller: TextEditingController(),
+                        label: "Re-type Password",
+                        isPassword: true,
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      CustomButton(
+                        label: "Sign Up",
+                        onPressed: () {
+                          controller.onSignUp();
+                        },
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Already have an account? ",
                             style: TextStyle(
-                              color: const Color(0xFFFFA500),
+                              color: Colors.black,
                               fontSize: 15,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          GestureDetector(
+                            onTap: () {},
+                            child: Text(
+                              "Sign In",
+                              style: TextStyle(
+                                color: const Color(0xFFFFA500),
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

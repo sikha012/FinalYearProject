@@ -39,6 +39,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
     return SizedBox(
       width: 350,
       child: TextFormField(
+        controller: widget.controller,
         textInputAction: widget.textInputAction,
         cursorColor: widget.cursorColor ?? Colors.grey,
         cursorHeight: widget.cursorHeight ?? 22,
@@ -46,7 +47,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
         obscureText: widget.isPassword! ? !isObscured : false,
         style: widget.textStyle ??
             const TextStyle(
-              color: Colors.white,
+              color: Colors.black,
             ),
         decoration: InputDecoration(
           filled: true,
