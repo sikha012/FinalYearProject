@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
+import 'package:initial_app/app/utils/memory_management.dart';
 
 import 'app/routes/app_pages.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -14,6 +15,7 @@ void main() {
       statusBarIconBrightness: Brightness.light,
     ),
   );
+  await MemoryManagement.init();
   runApp(
     GetMaterialApp(
       title: "Application",

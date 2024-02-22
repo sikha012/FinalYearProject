@@ -13,7 +13,7 @@ class SignUpController extends GetxController {
   TextEditingController contactController = TextEditingController();
 
   Future<void> onSignUp() async {
-    String url = 'http://192.168.1.71:8001/register';
+    String url = 'http://172.16.19.95:8001/register';
     Uri uri = Uri.parse(url);
     final response = await http.post(uri, body: {
       "username": userNameController.text,
@@ -24,7 +24,7 @@ class SignUpController extends GetxController {
     });
 
     Map<String, dynamic> register = json.decode(response.body);
-    if (response.statusCode == 205) {
+    if (response.statusCode == 200) {
       debugPrint(register.toString());
       Get.showSnackbar(
         GetSnackBar(

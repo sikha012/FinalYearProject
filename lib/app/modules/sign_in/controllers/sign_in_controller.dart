@@ -12,7 +12,7 @@ class SignInController extends GetxController {
   TextEditingController passwordController = TextEditingController();
 
   Future<void> onLogin() async {
-    String url = 'http://192.168.1.71:8001/login';
+    String url = 'http://172.16.19.95:8001/login';
     Uri uri = Uri.parse(url);
     final response = await http.post(uri, body: {
       "email": emailController.text,
@@ -22,10 +22,10 @@ class SignInController extends GetxController {
     Map<String, dynamic> login = json.decode(response.body);
     if (response.statusCode == 200) {
       debugPrint(login.toString());
-      debugPrint(login['msg']);
+      debugPrint(login['message']);
       Get.showSnackbar(
         GetSnackBar(
-          message: login['msg'],
+          message: login['message'],
           backgroundColor: Colors.green,
           duration: const Duration(seconds: 1),
         ),
@@ -34,7 +34,7 @@ class SignInController extends GetxController {
     } else if (response.statusCode == 401) {
       Get.showSnackbar(
         GetSnackBar(
-          message: login['msg'],
+          message: login['message'],
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 1),
         ),
