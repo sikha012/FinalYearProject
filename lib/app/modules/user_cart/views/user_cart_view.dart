@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:happytails/app/components/cart_product_card.dart';
 import 'package:happytails/app/components/customs/custom_button.dart';
 import 'package:happytails/app/components/customs/custom_snackbar.dart';
-import 'package:happytails/app/routes/app_pages.dart';
 import 'package:happytails/app/utils/constants.dart';
 
 import '../controllers/user_cart_controller.dart';
@@ -189,7 +188,7 @@ class UserCartView extends GetView<UserCartController> {
                                 title: 'Info',
                                 message: 'Select a product to continue',
                               )
-                            : Get.toNamed(Routes.MAIN);
+                            : controller.makeOrder();
                       },
                     ),
                   ],

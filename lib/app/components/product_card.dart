@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:happytails/app/data/models/product.dart';
 import 'package:happytails/app/modules/user_cart/controllers/user_cart_controller.dart';
+import 'package:happytails/app/utils/asset_files.dart';
 import 'package:happytails/app/utils/constants.dart';
 
 class ProductCard extends StatelessWidget {
@@ -28,13 +29,16 @@ class ProductCard extends StatelessWidget {
               flex: 2,
               child: Hero(
                 tag: 'product+${product.productId}',
-                child: Image.network(
-                  getImage(
-                    product.productImage,
-                  ),
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+                // tag: 'product',
+                child: product.productImage == null
+                    ? Image.asset(AssetFile.cartProductImage)
+                    : Image.network(
+                        getImage(
+                          product.productImage,
+                        ),
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
             Expanded(
@@ -56,7 +60,7 @@ class ProductCard extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            product.sellerId.toString(),
+                            product.sellerName.toString(),
                             style: const TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,

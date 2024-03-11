@@ -1,16 +1,25 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:happytails/app/components/customs/custom_snackbar.dart';
 import 'package:happytails/app/data/models/cart_product.dart';
+import 'package:happytails/app/data/models/order.dart';
 import 'package:happytails/app/data/models/product.dart';
+import 'package:happytails/app/data/provider/order_services.dart';
+import 'package:happytails/app/modules/main/views/main_view.dart';
 import 'package:happytails/app/utils/memory_management.dart';
 
 class UserCartController extends GetxController {
   final count = 0.obs;
   var total = 0.obs;
-  List<CartProduct> cartProducts = [];
+
+  RxList<CartProduct> cartProducts = RxList<CartProduct>();
   RxList<CartProduct> selectedCartProducts = RxList<CartProduct>();
+
+  OrderService order = OrderService();
+
+  Order? orderMade;
 
   @override
   void onInit() {
@@ -22,7 +31,7 @@ class UserCartController extends GetxController {
   void getSavedCartProducts() {
     var localCart =
         jsonDecode(MemoryManagement.getMyCart() ?? '[]') as List<dynamic>;
-    this.cartProducts = localCart
+    this.cartProducts.value = localCart
         .map(
           (e) => CartProduct(
             product: Product.fromJson(e['product']),
@@ -37,8 +46,10 @@ class UserCartController extends GetxController {
     MemoryManagement.setMyCart(
       jsonEncode(
         cartProducts
-            .map((e) =>
-                {'product': e.product.toJson(), 'productQuantity': e.productQuantity})
+            .map((e) => {
+                  'product': e.product.toJson(),
+                  'productQuantity': e.productQuantity
+                })
             .toList(),
       ),
     );
@@ -71,7 +82,7 @@ class UserCartController extends GetxController {
     selectedCartProducts.forEach(
       (element) {
         total.value = total.value +
-            element.product.productPrice! * element.productQuantity;
+            (element.product.productPrice ?? 0) * element.productQuantity;
       },
     );
   }
@@ -122,9 +133,71 @@ class UserCartController extends GetxController {
     selectedCartProducts.remove(cartProducts.elementAt(index));
     cartProducts.removeAt(index);
     saveCartProducts();
-
     updateCartTotal();
     update();
+  }
+
+  void makeOrder() async {
+    try {
+      List<Map<String, dynamic>> cartProducts =
+          selectedCartProducts.map((item) {
+        return {
+          "product": {
+            "product_id": item.product.productId,
+            "product_name": item.product.productName,
+            "product_price": item.product.productPrice,
+            "productstock_quantity": item.product.productstockQuantity,
+            "product_description": item.product.productDescription,
+            "product_image": item.product.productImage,
+            "petcategory_id": item.product.petcategoryId,
+            "productcategory_id": item.product.productcategoryId,
+            "seller_id": item.product.sellerId,
+            "petcategory_name": item.product.petcategoryName,
+            "productcategory_name": item.product.productcategoryName,
+            "seller_name": item.product.sellerName
+          },
+          "isSelected": item.selected,
+          "quantity": item.productQuantity,
+        };
+      }).toList();
+
+      await order
+          .createOrder(
+        userId: await MemoryManagement.getUserId() ?? 0,
+        totalAmount: total.value,
+        cartItems: cartProducts,
+      )
+          .then((value) {
+        orderMade = value;
+        CustomSnackbar.successSnackbar(
+          context: Get.context,
+          title: 'Success',
+          message: 'Order created successfully',
+        );
+        debugPrint(value.orderId.toString());
+        debugPrint(value.order?.orderStatus);
+        Get.to(() => const MainView());
+        // Get.to(
+        //   () => const OrderSummaryView(),
+        //   arguments: {
+        //     'orderedItems': selectedCartItems,
+        //     'orderId': createdOrderId.value.toString()
+        //   },
+        // );
+      }).onError((error, stackTrace) {
+        CustomSnackbar.errorSnackbar(
+          context: Get.context,
+          title: 'Error',
+          message: error.toString(),
+        );
+      });
+    } catch (e) {
+      CustomSnackbar.errorSnackbar(
+        context: Get.context,
+        title: 'Exception',
+        message: e.toString(),
+      );
+    }
   }
 
   @override

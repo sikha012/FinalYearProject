@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:happytails/app/components/product_card.dart';
+import 'package:happytails/app/modules/user_cart/controllers/user_cart_controller.dart';
 import 'package:happytails/app/routes/app_pages.dart';
 import 'package:happytails/app/utils/constants.dart';
 
@@ -12,6 +13,7 @@ class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    var cartController = Get.put(UserCartController());
     var controller = Get.put(HomeController());
     return Scaffold(
       appBar: AppBar(
@@ -43,13 +45,15 @@ class HomeView extends GetView<HomeController> {
                         color: Constants.tertiaryColor,
                         borderRadius: BorderRadius.circular(50),
                       ),
-                      child: Center(
-                        child: Text(
-                          '1',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                      child: Obx(
+                        () => Center(
+                          child: Text(
+                            cartController.cartProducts.length.toString(),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),

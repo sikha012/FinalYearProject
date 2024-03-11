@@ -9,6 +9,7 @@ import 'package:happytails/app/modules/sign_in/views/sign_in_view.dart';
 import 'package:happytails/app/routes/app_pages.dart';
 import 'package:happytails/app/utils/asset_files.dart';
 import 'package:happytails/app/utils/constants.dart';
+import 'package:happytails/app/utils/memory_management.dart';
 import 'package:happytails/app/views/views/edit_profile_view.dart';
 
 import '../controllers/profile_controller.dart';
@@ -364,7 +365,8 @@ class ProfileView extends GetView<ProfileController> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Get.offAll(() => const SignInView());
+                    MemoryManagement.removeAll();
+                    Get.offAllNamed(Routes.SIGN_IN);
                   },
                   child: Text(
                     "LOG OUT",

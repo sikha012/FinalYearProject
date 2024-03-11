@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:happytails/app/components/customs/custom_button.dart';
 import 'package:happytails/app/data/models/product.dart';
 import 'package:happytails/app/modules/user_cart/controllers/user_cart_controller.dart';
+import 'package:happytails/app/utils/asset_files.dart';
 import 'package:happytails/app/utils/constants.dart';
 
 import '../controllers/product_detail_controller.dart';
@@ -32,12 +33,15 @@ class ProductDetailView extends GetView<ProductDetailController> {
               children: [
                 Hero(
                   tag: 'product+${product.productId}',
-                  child: Image.network(
-                    width: double.infinity,
-                    height: Get.height * 0.4,
-                    getImage(product.productImage ?? ''),
-                    fit: BoxFit.cover,
-                  ),
+                  child: product.productImage == null
+                      ? Image.asset(AssetFile.cartProductImage)
+                      : Image.network(
+                          getImage(
+                            product.productImage,
+                          ),
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
