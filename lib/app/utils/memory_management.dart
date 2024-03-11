@@ -33,6 +33,14 @@ class MemoryManagement {
     prefs!.remove('refreshToken');
   }
 
+  static int? getUserId() {
+    return prefs != null ? prefs!.getInt('userId') : null;
+  }
+
+  static void setUserId(int userId) {
+    prefs!.setInt('userId', userId);
+  }
+
   // For User Role
   static String? getAccessRole() {
     return prefs != null ? prefs!.getString('role') : null;

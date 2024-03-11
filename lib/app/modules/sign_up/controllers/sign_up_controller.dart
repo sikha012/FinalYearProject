@@ -1,59 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:happytails/app/components/customs/custom_snackbar.dart';
+import 'package:happytails/app/data/provider/auth_services.dart';
+import 'package:happytails/app/routes/app_pages.dart';
 
 class SignUpController extends GetxController {
   final count = 0.obs;
+  var isLoading = false.obs;
+  AuthService auth = AuthService();
   GlobalKey<FormState> signUpFormKey = GlobalKey<FormState>();
   TextEditingController userNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController contactController = TextEditingController();
 
   Future<void> onSignUp() async {
-    String url = 'http://172.16.19.95:8001/register';
-    Uri uri = Uri.parse(url);
-    final response = await http.post(uri, body: {
-      "username": userNameController.text,
-      "email": emailController.text,
-      "password": passwordController.text,
-      "location": addressController.text,
-      "contact": contactController.text,
-    });
-
-    Map<String, dynamic> register = json.decode(response.body);
-    if (response.statusCode == 200) {
-      debugPrint(register.toString());
-      Get.showSnackbar(
-        GetSnackBar(
-          message: register['msg'],
-          backgroundColor: Colors.green,
-          duration: const Duration(seconds: 1),
-        ),
-      );
-      Get.back();
-    } else if (response.statusCode == 400) {
-      debugPrint(register.toString());
-      Get.showSnackbar(
-        GetSnackBar(
-          message: register['msg'],
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 1),
-        ),
-      );
-    } else if (response.statusCode == 409) {
-      debugPrint(register.toString());
-      Get.showSnackbar(
-        GetSnackBar(
-          message: register['msg'],
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 1),
-        ),
-      );
+    if (signUpFormKey.currentState!.validate()) {
+      if (passwordController.text != confirmPasswordController.text) {
+        CustomSnackbar.errorSnackbar(
+          context: Get.context,
+          title: 'Error',
+          message: "Passwords don't match",
+        );
+      } else {
+        if (userNameController.text.split(' ').length >= 3) {
+          CustomSnackbar.errorSnackbar(
+            context: Get.context,
+            title: 'Error',
+            message: "Invalid user name!",
+          );
+        } else {
+          try {
+            isLoading.value = true;
+            Map<String, dynamic> userData = {
+              "username": userNameController.text,
+              "email": emailController.text,
+              "password": passwordController.text,
+              "location": addressController.text,
+              "contact": contactController.text,
+            };
+            await auth.signUp(userData).then((value) {
+              CustomSnackbar.successSnackbar(
+                context: Get.context,
+                title: 'Success',
+                message: value.toString(),
+              );
+              isLoading.value = true;
+              Get.offAllNamed(Routes.SIGN_IN);
+            }).onError((error, stackTrace) {
+              CustomSnackbar.errorSnackbar(
+                context: Get.context,
+                title: 'Error',
+                message: error.toString(),
+              );
+              isLoading.value = false;
+            });
+          } catch (e) {
+            CustomSnackbar.errorSnackbar(
+              context: Get.context,
+              title: 'Error',
+              message: 'Something went wrong...',
+            );
+            isLoading.value = false;
+          }
+        }
+      }
     } else {
-      debugPrint("failed to load");
+      CustomSnackbar.errorSnackbar(
+        context: Get.context,
+        title: 'Error',
+        message: 'Please fill all the fields',
+      );
     }
   }
 

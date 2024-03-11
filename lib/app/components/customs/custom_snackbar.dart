@@ -7,6 +7,7 @@ class CustomSnackbar {
     required BuildContext? context,
     required String title,
     required String message,
+    Duration? duration,
   }) {
     Get.snackbar(
       title,
@@ -35,7 +36,7 @@ class CustomSnackbar {
         color: Colors.white,
       ),
       shouldIconPulse: true,
-      duration: const Duration(seconds: 3),
+      duration: duration ?? const Duration(seconds: 3),
     );
   }
 
@@ -43,6 +44,7 @@ class CustomSnackbar {
     required BuildContext? context,
     required String title,
     required String message,
+    Duration? duration,
   }) {
     Get.snackbar(
       title,
@@ -71,7 +73,7 @@ class CustomSnackbar {
         color: Colors.white,
       ),
       shouldIconPulse: true,
-      duration: const Duration(seconds: 3),
+      duration: duration ?? const Duration(seconds: 3),
     );
   }
 
@@ -79,6 +81,7 @@ class CustomSnackbar {
     required BuildContext? context,
     required String title,
     required String message,
+    Duration? duration,
   }) {
     Get.snackbar(
       title,
@@ -107,7 +110,7 @@ class CustomSnackbar {
         color: Colors.white,
       ),
       shouldIconPulse: true,
-      duration: const Duration(seconds: 3),
+      duration: duration ?? const Duration(seconds: 3),
     );
   }
 }

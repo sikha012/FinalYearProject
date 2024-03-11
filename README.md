@@ -1,4 +1,4 @@
-# initial_app
+# happytails
 
 A new Flutter project.
 

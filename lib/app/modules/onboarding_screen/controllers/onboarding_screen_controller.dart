@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:initial_app/app/views/onBoardingScreen/firstscreen_view.dart';
-import 'package:initial_app/app/views/onBoardingScreen/secondscreen_view.dart';
-import 'package:initial_app/app/views/onBoardingScreen/thirdscreen_view.dart';
+import 'package:happytails/app/views/onBoardingScreen/firstscreen_view.dart';
+import 'package:happytails/app/views/onBoardingScreen/secondscreen_view.dart';
+import 'package:happytails/app/views/onBoardingScreen/thirdscreen_view.dart';
 
 class OnboardingScreenController extends GetxController {
 

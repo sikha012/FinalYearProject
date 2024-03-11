@@ -18,6 +18,9 @@ class Product {
   final int? petcategoryId;
   final int? productcategoryId;
   final int? sellerId;
+  final String? petcategoryName;
+  final String? productcategoryName;
+  final String? sellerName;
 
   Product({
     this.productId,
@@ -29,6 +32,9 @@ class Product {
     this.petcategoryId,
     this.productcategoryId,
     this.sellerId,
+    this.petcategoryName,
+    this.productcategoryName,
+    this.sellerName,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
@@ -41,6 +47,9 @@ class Product {
         petcategoryId: json["petcategory_id"],
         productcategoryId: json["productcategory_id"],
         sellerId: json["seller_id"],
+        petcategoryName: json["petcategory_name"],
+        productcategoryName: json["productcategory_name"],
+        sellerName: json["seller_name"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -53,5 +62,8 @@ class Product {
         "petcategory_id": petcategoryId,
         "productcategory_id": productcategoryId,
         "seller_id": sellerId,
+        "petcategory_name": petcategoryName,
+        "productcategory_name": productcategoryName,
+        "seller_name": sellerName,
       };
 }

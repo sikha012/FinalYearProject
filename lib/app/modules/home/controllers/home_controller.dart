@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:initial_app/app/data/models/product.dart';
-import 'package:initial_app/app/utils/constants.dart';
+import 'package:happytails/app/data/models/product.dart';
+import 'package:happytails/app/utils/constants.dart';
 import 'package:http/http.dart' as http;
 
 class HomeController extends GetxController {

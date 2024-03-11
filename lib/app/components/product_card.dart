@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:initial_app/app/data/models/product.dart';
-import 'package:initial_app/app/utils/constants.dart';
+import 'package:get/get.dart';
+import 'package:happytails/app/data/models/product.dart';
+import 'package:happytails/app/modules/user_cart/controllers/user_cart_controller.dart';
+import 'package:happytails/app/utils/constants.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
+
   const ProductCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
+    var userCartController = Get.put(UserCartController());
     return GestureDetector(
       child: Container(
         decoration: BoxDecoration(color: Colors.white, boxShadow: [
@@ -25,7 +29,7 @@ class ProductCard extends StatelessWidget {
               child: Hero(
                 tag: 'product+${product.productId}',
                 child: Image.network(
-                  getProductImage(
+                  getImage(
                     product.productImage,
                   ),
                   width: double.infinity,
@@ -72,7 +76,7 @@ class ProductCard extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              // cartController.addProduct(product: product);
+                              userCartController.addToCart(product: product);
                             },
                             child: const Icon(Icons.add_shopping_cart),
                           ),

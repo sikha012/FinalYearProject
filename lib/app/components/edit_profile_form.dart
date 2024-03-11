@@ -52,6 +52,7 @@ class _CustomTextfieldState extends State<EditProfileForm> {
             SizedBox(
               width: 250,
               child: TextFormField(
+                controller: widget.controller,
                 textAlign: TextAlign.right,
                 textInputAction: widget.textInputAction,
                 cursorColor: widget.cursorColor ?? Colors.grey,
@@ -66,28 +67,28 @@ class _CustomTextfieldState extends State<EditProfileForm> {
                   fillColor: Colors.white,
                   contentPadding:
                       widget.contentPadding ?? const EdgeInsets.only(left: 50),
-                  border: UnderlineInputBorder(
+                  border: const UnderlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.grey,
                       width: 2,
                       style: BorderStyle.none,
                     ),
                   ),
-                  enabledBorder: UnderlineInputBorder(
+                  enabledBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.grey,
                       width: 2,
                       style: BorderStyle.none,
                     ),
                   ),
-                  focusedBorder: UnderlineInputBorder(
+                  focusedBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.grey,
                       width: 2,
                       style: BorderStyle.none,
                     ),
                   ),
-                  errorBorder: UnderlineInputBorder(
+                  errorBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.red,
                       width: 2,
@@ -99,7 +100,7 @@ class _CustomTextfieldState extends State<EditProfileForm> {
             ),
           ],
         ),
-        Divider(),
+        const Divider(),
       ],
     );
   }

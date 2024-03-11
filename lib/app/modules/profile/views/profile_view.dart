@@ -1,10 +1,15 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:initial_app/app/components/customs/custom_button.dart';
-import 'package:initial_app/app/utils/asset_files.dart';
-import 'package:initial_app/app/views/views/edit_profile_view.dart';
+import 'package:happytails/app/components/customs/custom_button.dart';
+import 'package:happytails/app/modules/sign_in/views/sign_in_view.dart';
+import 'package:happytails/app/routes/app_pages.dart';
+import 'package:happytails/app/utils/asset_files.dart';
+import 'package:happytails/app/utils/constants.dart';
+import 'package:happytails/app/views/views/edit_profile_view.dart';
 
 import '../controllers/profile_controller.dart';
 
@@ -47,30 +52,58 @@ class ProfileView extends GetView<ProfileController> {
                 ),
                 Positioned(
                   top: 10,
-                  left: 115,
+                  left: 95,
                   child: Column(
                     children: [
                       Container(
-                        width: Get.width * 0.4,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.white,
-                              blurRadius: 1,
-                            ),
-                          ],
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Constants.tertiaryColor,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(100),
                         ),
-                        child: Image.asset(AssetFile.userImage),
-                      ),
-                      Text(
-                        controller.userName,
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
+                        child: Obx(
+                          () => controller.userDetail.value.profileImage != null
+                              ? CircleAvatar(
+                                  radius: 70,
+                                  backgroundImage: NetworkImage(
+                                    getImage(
+                                      controller.userDetail.value.profileImage,
+                                    ),
+                                  ),
+                                )
+                              : controller.selectedBytes.value != null
+                                  ? CircleAvatar(
+                                      radius: 70,
+                                      backgroundImage: MemoryImage(
+                                        controller.selectedBytes.value!,
+                                      ),
+                                    )
+                                  : const CircleAvatar(
+                                      backgroundImage: AssetImage(
+                                        AssetFile.userImage,
+                                      ),
+                                      radius: 70,
+                                    ),
                         ),
                       ),
-                      Text(controller.userEmail),
+                      Obx(
+                        () => Text(
+                          controller.userDetail.value.userName ??
+                              'No user name',
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Obx(
+                        () => Text(
+                          controller.userDetail.value.userEmail ??
+                              'No email found',
+                        ),
+                      ),
                       const SizedBox(
                         height: 8,
                       ),
@@ -134,13 +167,17 @@ class ProfileView extends GetView<ProfileController> {
                     GestureDetector(
                       child: Container(
                         decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: Color(0xFFEEEEEE)),
+                          shape: BoxShape.circle,
+                          color: Color(0xFFEEEEEE),
+                        ),
                         child: Icon(
                           CupertinoIcons.forward,
                           color: Color(0xFF8C8C8C),
                         ),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        Get.toNamed(Routes.PET_PROFILES);
+                      },
                     )
                   ],
                 ),
@@ -325,12 +362,17 @@ class ProfileView extends GetView<ProfileController> {
                 SizedBox(
                   height: 10,
                 ),
-                Text(
-                  "LOG OUT",
-                  style: TextStyle(
-                    color: Color(0xFFFFA500),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                GestureDetector(
+                  onTap: () {
+                    Get.offAll(() => const SignInView());
+                  },
+                  child: Text(
+                    "LOG OUT",
+                    style: TextStyle(
+                      color: Color(0xFFFFA500),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 )
               ],

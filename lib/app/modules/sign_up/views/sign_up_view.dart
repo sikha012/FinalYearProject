@@ -1,9 +1,12 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:initial_app/app/components/customs/custom_button.dart';
-import 'package:initial_app/app/components/customs/custom_textfield.dart';
+import 'package:happytails/app/components/customs/custom_button.dart';
+import 'package:happytails/app/components/customs/custom_textfield.dart';
+import 'package:happytails/app/routes/app_pages.dart';
 
 import '../controllers/sign_up_controller.dart';
 
@@ -73,7 +76,7 @@ class SignUpView extends GetView<SignUpController> {
                         height: 20,
                       ),
                       CustomTextfield(
-                        controller: TextEditingController(),
+                        controller: controller.confirmPasswordController,
                         label: "Re-type Password",
                         isPassword: true,
                       ),
@@ -100,7 +103,9 @@ class SignUpView extends GetView<SignUpController> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Get.offAllNamed(Routes.SIGN_IN);
+                            },
                             child: Text(
                               "Sign In",
                               style: TextStyle(

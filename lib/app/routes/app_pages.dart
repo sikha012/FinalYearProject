@@ -10,12 +10,18 @@ import '../modules/offers/bindings/offers_binding.dart';
 import '../modules/offers/views/offers_view.dart';
 import '../modules/onboarding_screen/bindings/onboarding_screen_binding.dart';
 import '../modules/onboarding_screen/views/onboarding_screen_view.dart';
+import '../modules/pet_profiles/bindings/pet_profiles_binding.dart';
+import '../modules/pet_profiles/views/pet_profiles_view.dart';
+import '../modules/product_detail/bindings/product_detail_binding.dart';
+import '../modules/product_detail/views/product_detail_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/sign_in/bindings/sign_in_binding.dart';
 import '../modules/sign_in/views/sign_in_view.dart';
 import '../modules/sign_up/bindings/sign_up_binding.dart';
 import '../modules/sign_up/views/sign_up_view.dart';
+import '../modules/user_cart/bindings/user_cart_binding.dart';
+import '../modules/user_cart/views/user_cart_view.dart';
 
 part 'app_routes.dart';
 
@@ -64,6 +70,21 @@ class AppPages {
       name: _Paths.CATEGORIES,
       page: () => const CategoriesView(),
       binding: CategoriesBinding(),
+    ),
+    GetPage(
+      name: _Paths.PET_PROFILES,
+      page: () => const PetProfilesView(),
+      binding: PetProfilesBinding(),
+    ),
+    GetPage(
+      name: _Paths.PRODUCT_DETAIL,
+      page: () => const ProductDetailView(),
+      binding: ProductDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.USER_CART,
+      page: () => const UserCartView(),
+      binding: UserCartBinding(),
     ),
   ];
 }

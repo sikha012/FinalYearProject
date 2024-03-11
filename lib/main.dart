@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
-import 'package:initial_app/app/utils/memory_management.dart';
+import 'package:happytails/app/utils/memory_management.dart';
 
 import 'app/routes/app_pages.dart';
 

@@ -1,6 +1,6 @@
 {
-    "name": "initial_app",
-    "short_name": "initial_app",
+    "name": "happytails",
+    "short_name": "happytails",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:initial_app/app/modules/onboarding_screen/controllers/onboarding_screen_controller.dart';
+import 'package:happytails/app/modules/onboarding_screen/controllers/onboarding_screen_controller.dart';
 
 class FirstscreenView extends GetView {
   const FirstscreenView({Key? key}) : super(key: key);
