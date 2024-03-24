@@ -9,11 +9,12 @@ import 'package:happytails/app/data/models/product.dart';
 import 'package:happytails/app/data/provider/order_services.dart';
 import 'package:happytails/app/modules/main/views/main_view.dart';
 import 'package:happytails/app/utils/memory_management.dart';
+import 'package:happytails/app/views/views/order_detail_view.dart';
+import 'package:happytails/app/views/views/payment_summary_view.dart';
 
 class UserCartController extends GetxController {
   final count = 0.obs;
   var total = 0.obs;
-
   RxList<CartProduct> cartProducts = RxList<CartProduct>();
   RxList<CartProduct> selectedCartProducts = RxList<CartProduct>();
 
@@ -26,6 +27,26 @@ class UserCartController extends GetxController {
     super.onInit();
     getSavedCartProducts();
     updateCartTotal();
+  }
+
+  void selectAllCartProducts(bool isSelected) {
+    if (isSelected) {
+      // When selecting all, mark each cart product as selected and add to selectedCartProducts
+      for (var product in cartProducts) {
+        product.selected = true;
+        if (!selectedCartProducts.contains(product)) {
+          selectedCartProducts.add(product);
+        }
+      }
+    } else {
+      // When deselecting all, mark each cart product as not selected and clear selectedCartProducts
+      for (var product in cartProducts) {
+        product.selected = false;
+      }
+      selectedCartProducts.clear();
+    }
+    updateCartTotal();
+    update();
   }
 
   void getSavedCartProducts() {
@@ -176,14 +197,13 @@ class UserCartController extends GetxController {
         );
         debugPrint(value.orderId.toString());
         debugPrint(value.order?.orderStatus);
-        Get.to(() => const MainView());
-        // Get.to(
-        //   () => const OrderSummaryView(),
-        //   arguments: {
-        //     'orderedItems': selectedCartItems,
-        //     'orderId': createdOrderId.value.toString()
-        //   },
-        // );
+        Get.to(
+          () => const OrderDetailView(),
+          arguments: {
+            "selectedProducts": selectedCartProducts,
+            "orderMade": orderMade
+          },
+        );
       }).onError((error, stackTrace) {
         CustomSnackbar.errorSnackbar(
           context: Get.context,
@@ -196,6 +216,51 @@ class UserCartController extends GetxController {
         context: Get.context,
         title: 'Exception',
         message: e.toString(),
+      );
+    }
+  }
+
+  void createPayment({required grandTotal, required token}) async {
+    try {
+      await order
+          .createPayment(
+        userId: MemoryManagement.getUserId() ?? 0,
+        orderId: orderMade?.orderId ?? 0,
+        grandTotal: grandTotal,
+        token: token,
+      )
+          .then((value) async {
+        CustomSnackbar.successSnackbar(
+          context: Get.context,
+          title: 'Success',
+          message: value,
+        );
+        await Get.to(() => const PaymentSummaryView(), arguments: {
+          'orderedProducts': selectedCartProducts,
+          'token': token,
+        });
+        for (CartProduct product in selectedCartProducts) {
+          cartProducts.remove(product);
+        }
+        selectedCartProducts.clear();
+        saveCartProducts();
+        updateCartTotal();
+        Get.to(() => const MainView());
+        update();
+      }).onError((error, stackTrace) {
+        CustomSnackbar.errorSnackbar(
+          context: Get.context,
+          title: 'Error',
+          message: error.toString(),
+          duration: const Duration(seconds: 100),
+        );
+      });
+    } catch (e) {
+      CustomSnackbar.errorSnackbar(
+        context: Get.context,
+        title: 'Exception',
+        message: e.toString(),
+        duration: const Duration(seconds: 100),
       );
     }
   }

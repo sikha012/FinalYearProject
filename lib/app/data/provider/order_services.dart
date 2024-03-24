@@ -33,4 +33,40 @@ class OrderService extends ApiProvider {
       throw Exception("Exception: $e");
     }
   }
+
+  Future<String> createPayment({
+    required int userId,
+    required int orderId,
+    required int grandTotal,
+    required String token,
+  }) async {
+    try {
+      String endPoint = '/create-payment';
+      Response response = await dioJson.post(
+        endPoint,
+        data: {
+          "userId": userId,
+          "orderId": orderId,
+          "grandTotal": grandTotal,
+          "token": token
+        },
+      );
+      if (response.statusCode == 201) {
+        var responseData = response.data;
+        if (responseData is Map<String, dynamic> &&
+            responseData.containsKey('message') &&
+            responseData['message'] is String) {
+          return responseData['message'];
+        } else {
+          throw Exception("Unexpected response format");
+        }
+      } else {
+        return "Error: Server responded with status code ${response.statusCode}";
+      }
+    } on DioException catch (dioError) {
+      return "DioException: ${dioError.message}";
+    } catch (e) {
+      return "Exception: $e";
+    }
+  }
 }

@@ -13,6 +13,11 @@ import 'package:happytails/app/utils/memory_management.dart';
 import 'package:get/get.dart' as getpackage;
 
 class ApiProvider {
+  var url = "";
+  void getUrl() async {
+    url = await getBaseUrl();
+  }
+
   final Dio dioJson = Dio(
     BaseOptions(
       baseUrl: baseUrlLink,

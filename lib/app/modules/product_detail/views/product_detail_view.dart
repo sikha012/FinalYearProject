@@ -39,12 +39,12 @@ class ProductDetailView extends GetView<ProductDetailController> {
                           getImage(
                             product.productImage,
                           ),
-                          width: double.infinity,
+                          width: 300,
                           fit: BoxFit.cover,
                         ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.fromLTRB(10, 16, 10, 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

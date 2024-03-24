@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:get_ip_address/get_ip_address.dart';
 import 'package:happytails/app/components/customs/custom_progress_indicator.dart';
 import 'package:happytails/app/components/customs/custom_snackbar.dart';
 import 'package:happytails/app/data/provider/auth_services.dart';
 import 'package:happytails/app/routes/app_pages.dart';
 import 'package:happytails/app/utils/memory_management.dart';
+import 'package:network_info_plus/network_info_plus.dart';
 
 class SignInController extends GetxController {
   final count = 0.obs;
@@ -16,9 +18,17 @@ class SignInController extends GetxController {
   TextEditingController passwordController = TextEditingController();
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     checkUserToken();
+    var ipAddress = await getCurrentIp();
+    debugPrint("Ip is: $ipAddress");
+  }
+
+  Future<String?> getCurrentIp() async {
+    var info = NetworkInfo();
+    var wifiIp = await info.getWifiIP();
+    return wifiIp ?? "No Ip";
   }
 
   void checkUserToken() async {

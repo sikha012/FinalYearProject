@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:happytails/app/components/customs/custom_button.dart';
-import 'package:happytails/app/modules/sign_in/views/sign_in_view.dart';
 import 'package:happytails/app/routes/app_pages.dart';
 import 'package:happytails/app/utils/asset_files.dart';
 import 'package:happytails/app/utils/constants.dart';
 import 'package:happytails/app/utils/memory_management.dart';
 import 'package:happytails/app/views/views/edit_profile_view.dart';
+import 'package:happytails/app/views/views/payment_summary_view.dart';
 
 import '../controllers/profile_controller.dart';
 
@@ -221,7 +221,9 @@ class ProfileView extends GetView<ProfileController> {
                           color: Color(0xFF8C8C8C),
                         ),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(() => const PaymentSummaryView());
+                      },
                     )
                   ],
                 ),
