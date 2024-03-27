@@ -49,42 +49,44 @@ class SignInController extends GetxController {
   }
 
   void onSignIn() async {
-    try {
-      FullScreenDialogLoader.showDialog();
+    if (signInKey.currentState!.validate()) {
+      try {
+        FullScreenDialogLoader.showDialog();
 
-      Map<String, dynamic> data = {
-        "email": emailController.text,
-        "password": passwordController.text,
-      };
-      await auth.signIn(data).then((value) {
-        FullScreenDialogLoader.cancelDialog();
-        debugPrint('access token: ${value.accessToken}');
-        debugPrint(value.refreshToken);
-        MemoryManagement.setAccessToken(value.accessToken ?? '');
-        MemoryManagement.setRefreshToken(value.refreshToken ?? '');
-        MemoryManagement.setUserId(value.user?.userId ?? 0);
-        MemoryManagement.setUserType(value.user?.userType ?? '');
-        if (value.user?.userType == 'seller') {
-          Get.offAllNamed(Routes.SELLER_MAIN);
-        } else {
-          Get.offAllNamed(Routes.MAIN);
-        }
-      }).onError((error, stackTrace) {
-        FullScreenDialogLoader.cancelDialog();
+        Map<String, dynamic> data = {
+          "email": emailController.text,
+          "password": passwordController.text,
+        };
+        await auth.signIn(data).then((value) {
+          FullScreenDialogLoader.cancelDialog();
+          debugPrint('access token: ${value.accessToken}');
+          debugPrint(value.refreshToken);
+          MemoryManagement.setAccessToken(value.accessToken ?? '');
+          MemoryManagement.setRefreshToken(value.refreshToken ?? '');
+          MemoryManagement.setUserId(value.user?.userId ?? 0);
+          MemoryManagement.setUserType(value.user?.userType ?? '');
+          if (value.user?.userType == 'seller') {
+            Get.offAllNamed(Routes.SELLER_MAIN);
+          } else {
+            Get.offAllNamed(Routes.MAIN);
+          }
+        }).onError((error, stackTrace) {
+          FullScreenDialogLoader.cancelDialog();
 
+          CustomSnackbar.errorSnackbar(
+            context: Get.context,
+            title: "Error",
+            message: error.toString(),
+          );
+        });
+      } catch (e) {
+        FullScreenDialogLoader.cancelDialog();
         CustomSnackbar.errorSnackbar(
           context: Get.context,
           title: "Error",
-          message: error.toString(),
+          message: "Something went wrong",
         );
-      });
-    } catch (e) {
-      FullScreenDialogLoader.cancelDialog();
-      CustomSnackbar.errorSnackbar(
-        context: Get.context,
-        title: "Error",
-        message: "Something went wrong",
-      );
+      }
     }
   }
 

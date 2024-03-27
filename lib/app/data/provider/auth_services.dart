@@ -41,4 +41,31 @@ class AuthService extends ApiProvider {
       return Future.error('An unexpected error occurred: $e');
     }
   }
+
+  Future<String> verifyOTP(String email, String otp) async {
+    try {
+      final response = await dioJson.post(
+        '/verify-otp',
+        data: {'email': email, 'otp': otp},
+      );
+      return response.data['message'];
+    } on DioException catch (err) {
+      if (err.response?.statusCode == 400) {
+        return Future.error(err.response?.data['message'] ?? 'Invalid OTP');
+      } else if (err.response?.statusCode == 401) {
+        // OTP might have expired or is incorrect
+        return Future.error(
+            err.response?.data['message'] ?? 'OTP Expired or Incorrect');
+      } else if (err.response?.statusCode == 500) {
+        // Handle server errors
+        return Future.error('Internal Server Error');
+      } else {
+        // Generic error handling
+        return Future.error('An error occurred: ${err.message}');
+      }
+    } catch (e) {
+      // Catch any other errors
+      return Future.error('An unexpected error occurred: $e');
+    }
+  }
 }

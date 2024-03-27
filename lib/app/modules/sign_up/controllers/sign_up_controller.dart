@@ -8,6 +8,7 @@ class SignUpController extends GetxController {
   final count = 0.obs;
   var isLoading = false.obs;
   var isSeller = false.obs;
+  var verificationMessage = ''.obs;
   AuthService auth = AuthService();
   GlobalKey<FormState> signUpFormKey = GlobalKey<FormState>();
   TextEditingController userNameController = TextEditingController();
@@ -56,8 +57,8 @@ class SignUpController extends GetxController {
                 title: 'Success',
                 message: value.toString(),
               );
-              isLoading.value = true;
-              Get.offAllNamed(Routes.SIGN_IN);
+              isLoading.value = false;
+              //Get.offAllNamed(Routes.SIGN_IN);
             }).onError((error, stackTrace) {
               CustomSnackbar.errorSnackbar(
                 context: Get.context,
@@ -82,6 +83,41 @@ class SignUpController extends GetxController {
         title: 'Error',
         message: 'Please fill all the fields',
       );
+    }
+  }
+
+  Future<void> verifyUserOTP(String email, String otp) async {
+    try {
+      isLoading(true);
+      await auth.verifyOTP(email, otp).then((responseMessage) {
+        // OTP verified successfully
+        verificationMessage(responseMessage); // Update the verification message
+        CustomSnackbar.successSnackbar(
+          context: Get.context,
+          title: 'Success',
+          message: 'OTP verified successfully.',
+        );
+        // Navigate to the next screen or perform other actions after successful verification
+        Get.offAllNamed(Routes.SIGN_IN); // Assuming you have a home route
+      }).onError((error, stackTrace) {
+        // Error occurred during OTP verification
+        CustomSnackbar.errorSnackbar(
+          context: Get.context,
+          title: 'Verification Error',
+          message: error.toString(),
+          duration: Duration(seconds: 500),
+        );
+        Get.offAllNamed(Routes.SIGN_UP);
+      });
+    } catch (e) {
+      // Handle any other errors
+      CustomSnackbar.errorSnackbar(
+        context: Get.context,
+        title: 'Error',
+        message: 'An unexpected error occurred: $e',
+      );
+    } finally {
+      isLoading(false);
     }
   }
 

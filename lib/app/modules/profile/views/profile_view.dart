@@ -53,7 +53,7 @@ class ProfileView extends GetView<ProfileController> {
                 ),
                 Positioned(
                   top: 10,
-                  left: 95,
+                  left: 130,
                   child: Column(
                     children: [
                       Container(

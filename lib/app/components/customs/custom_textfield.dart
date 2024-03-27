@@ -57,7 +57,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 350,
-      height: 45,
+      //height: 45,
       child: TextFormField(
         controller: widget.controller,
         textInputAction: widget.textInputAction,
