@@ -1,14 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
+import 'package:happytails/app/data/provider/firebase_services.dart';
 import 'package:happytails/app/utils/memory_management.dart';
+import 'package:happytails/firebase_options.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 
 import 'app/routes/app_pages.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await MemoryManagement.init();
+  await FirebaseServices().initNotifications();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.black,
@@ -16,7 +22,6 @@ void main() async {
       statusBarIconBrightness: Brightness.light,
     ),
   );
-  await MemoryManagement.init();
   runApp(
     KhaltiScope(
       //9862386795

@@ -53,6 +53,14 @@ class SignInView extends GetView<SignInController> {
                               CustomTextfield(
                                 controller: controller.emailController,
                                 label: "Email",
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your email';
+                                  } else if (!GetUtils.isEmail(value)) {
+                                    return 'Please enter a valid email';
+                                  }
+                                  return null;
+                                },
                               ),
                               const SizedBox(
                                 height: 20,
@@ -61,6 +69,13 @@ class SignInView extends GetView<SignInController> {
                                 controller: controller.passwordController,
                                 label: "Password",
                                 isPassword: true,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your password';
+                                  }
+                                  // Add more password validation if needed
+                                  return null;
+                                },
                               ),
                               const SizedBox(
                                 height: 15,

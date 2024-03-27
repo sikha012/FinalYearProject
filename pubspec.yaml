@@ -21,6 +21,9 @@ dependencies:
   khalti_flutter: ^3.0.0
   network_info_plus: ^4.1.0+1
   intl: ^0.18.1
+  firebase_core: ^2.27.0
+  flutter_local_notifications: ^17.0.0
+  firebase_messaging: ^14.7.19
 
 dev_dependencies:
   flutter_lints: ^2.0.0

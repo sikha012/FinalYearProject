@@ -14,22 +14,23 @@ class CustomTextfield extends StatefulWidget {
   final VoidCallback? onSuffixIconPress;
   final TextInputAction? textInputAction;
   final bool isDate;
+  final FormFieldValidator<String>? validator;
 
-  const CustomTextfield({
-    super.key,
-    required this.controller,
-    required this.label,
-    this.labelStyle,
-    this.textStyle,
-    this.cursorColor,
-    this.cursorHeight,
-    this.contentPadding,
-    this.isPassword = false,
-    this.suffixIcon,
-    this.onSuffixIconPress,
-    this.textInputAction,
-    this.isDate = false,
-  });
+  const CustomTextfield(
+      {super.key,
+      required this.controller,
+      required this.label,
+      this.labelStyle,
+      this.textStyle,
+      this.cursorColor,
+      this.cursorHeight,
+      this.contentPadding,
+      this.isPassword = false,
+      this.suffixIcon,
+      this.onSuffixIconPress,
+      this.textInputAction,
+      this.isDate = false,
+      this.validator});
 
   @override
   State<CustomTextfield> createState() => _CustomTextfieldState();
@@ -69,6 +70,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
               color: Colors.black,
             ),
         readOnly: widget.isDate,
+        validator: widget.validator,
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,

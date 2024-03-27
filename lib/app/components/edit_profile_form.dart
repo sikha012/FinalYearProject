@@ -12,21 +12,22 @@ class EditProfileForm extends StatefulWidget {
   final Icon? suffixIcon;
   final VoidCallback? onSuffixIconPress;
   final TextInputAction? textInputAction;
+  final FormFieldValidator<String>? validator;
 
-  const EditProfileForm({
-    super.key,
-    required this.controller,
-    this.label,
-    this.labelStyle,
-    this.textStyle,
-    this.cursorColor,
-    this.cursorHeight,
-    this.contentPadding,
-    this.isPassword = false,
-    this.suffixIcon,
-    this.onSuffixIconPress,
-    this.textInputAction,
-  });
+  const EditProfileForm(
+      {super.key,
+      required this.controller,
+      this.label,
+      this.labelStyle,
+      this.textStyle,
+      this.cursorColor,
+      this.cursorHeight,
+      this.contentPadding,
+      this.isPassword = false,
+      this.suffixIcon,
+      this.onSuffixIconPress,
+      this.textInputAction,
+      this.validator});
 
   @override
   State<EditProfileForm> createState() => _CustomTextfieldState();
@@ -62,6 +63,7 @@ class _CustomTextfieldState extends State<EditProfileForm> {
                     const TextStyle(
                       color: Color(0xFF3F3F3F),
                     ),
+                validator: widget.validator,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,

@@ -77,22 +77,55 @@ class EditProfileView extends GetView<ProfileController> {
                             EditProfileForm(
                               controller: controller.firstNameController,
                               label: "First Name",
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter your first name';
+                                }
+                                return null;
+                              },
                             ),
                             EditProfileForm(
                               controller: controller.lastNameController,
                               label: "Last Name",
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter your last name';
+                                }
+                                return null;
+                              },
                             ),
                             EditProfileForm(
                               controller: controller.emailController,
                               label: "Email",
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter your email';
+                                } else if (!GetUtils.isEmail(value)) {
+                                  return 'Please enter a valid email';
+                                }
+                                return null;
+                              },
                             ),
                             EditProfileForm(
                               controller: controller.contactController,
                               label: "Contact",
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter your contact number';
+                                }
+
+                                return null;
+                              },
                             ),
                             EditProfileForm(
                               controller: controller.locationController,
                               label: "Location",
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter your location';
+                                }
+                                return null;
+                              },
                             ),
                             const SizedBox(
                               height: 25,
@@ -216,7 +249,9 @@ class EditProfileView extends GetView<ProfileController> {
                 CustomButton(
                   label: "Save",
                   onPressed: () {
-                    controller.onSave();
+                    if (controller.editFormKey.currentState!.validate()) {
+                      controller.onSave();
+                    }
                   },
                 ),
               ],

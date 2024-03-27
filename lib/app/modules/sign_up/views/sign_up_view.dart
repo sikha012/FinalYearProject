@@ -41,15 +41,26 @@ class SignUpView extends GetView<SignUpController> {
                         ),
                       ),
                       CustomTextfield(
-                        controller: controller.userNameController,
-                        label: "Username",
-                      ),
+                          controller: controller.userNameController,
+                          label: "Username",
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter your username';
+                            }
+                            return null;
+                          }),
                       SizedBox(
                         height: 20,
                       ),
                       CustomTextfield(
                         controller: controller.emailController,
                         label: "Email",
+                        validator: (value) {
+                          if (!GetUtils.isEmail(value!)) {
+                            return 'Please enter a valid email';
+                          }
+                          return null;
+                        },
                       ),
                       SizedBox(
                         height: 20,
@@ -57,6 +68,12 @@ class SignUpView extends GetView<SignUpController> {
                       CustomTextfield(
                         controller: controller.contactController,
                         label: "Contact number",
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter your contact number';
+                          }
+                          return null;
+                        },
                       ),
                       SizedBox(
                         height: 20,
@@ -64,6 +81,12 @@ class SignUpView extends GetView<SignUpController> {
                       CustomTextfield(
                         controller: controller.addressController,
                         label: "Address",
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter your address';
+                          }
+                          return null;
+                        },
                       ),
                       SizedBox(
                         height: 20,
@@ -72,6 +95,12 @@ class SignUpView extends GetView<SignUpController> {
                         controller: controller.passwordController,
                         label: "Password",
                         isPassword: true,
+                        validator: (value) {
+                          if (value!.isEmpty || value.length < 6) {
+                            return 'Password must be at least 6 characters long';
+                          }
+                          return null;
+                        },
                       ),
                       SizedBox(
                         height: 20,
@@ -80,6 +109,12 @@ class SignUpView extends GetView<SignUpController> {
                         controller: controller.confirmPasswordController,
                         label: "Re-type Password",
                         isPassword: true,
+                        validator: (value) {
+                          if (value != controller.passwordController.text) {
+                            return 'Passwords do not match';
+                          }
+                          return null;
+                        },
                       ),
                       SizedBox(
                         height: 20,
@@ -116,7 +151,11 @@ class SignUpView extends GetView<SignUpController> {
                       CustomButton(
                         label: "Sign Up",
                         onPressed: () {
-                          controller.onSignUp();
+                          if (controller.signUpFormKey.currentState!
+                              .validate()) {
+                            // If all validations pass, proceed with signup.
+                            controller.onSignUp();
+                          }
                         },
                       ),
                       SizedBox(
