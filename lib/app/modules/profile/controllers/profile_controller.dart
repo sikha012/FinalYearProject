@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:happytails/app/modules/seller_main/controllers/seller_main_controller.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:happytails/app/components/customs/custom_snackbar.dart';
 import 'package:happytails/app/data/models/user_model.dart';
@@ -19,8 +20,18 @@ class ProfileController extends GetxController {
   final String userContact = "987654321";
   final String userLocation = "Lakeside, Pokhara";
 
+  var userType = MemoryManagement.getUserType();
+
   UserServices userServices = UserServices();
-  Rx<UserModel> userDetail = Get.find<MainController>().userDetail;
+  bool? isSeller;
+  Rx<UserModel>? userDetail;
+
+  void initializeUserDetail() {
+    isSeller = userType == 'seller' ? true : false;
+    userDetail = isSeller!
+        ? Get.find<SellerMainController>().userDetail
+        : Get.find<MainController>().userDetail;
+  }
 
   ImagePicker picker = ImagePicker();
   XFile? userImage;
@@ -36,13 +47,14 @@ class ProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit(); // username = Sikha Kunwar
-    firstNameController.text = userDetail.value.userName!.split(' ')[0];
-    lastNameController.text = userDetail.value.userName!.split(' ')[1];
-    emailController.text = userDetail.value.userEmail ?? '';
-    contactController.text = userDetail.value.userContact ?? '';
-    locationController.text = userDetail.value.userLocation ?? '';
+    initializeUserDetail();
+    firstNameController.text = userDetail!.value.userName!.split(' ')[0];
+    lastNameController.text = userDetail!.value.userName!.split(' ')[1];
+    emailController.text = userDetail!.value.userEmail ?? '';
+    contactController.text = userDetail!.value.userContact ?? '';
+    locationController.text = userDetail!.value.userLocation ?? '';
     debugPrint(firstNameController.text);
-    debugPrint(userDetail.value.profileImage);
+    debugPrint(userDetail!.value.profileImage);
   }
 
   void onSave() async {
@@ -64,8 +76,13 @@ class ProfileController extends GetxController {
           message: value,
           duration: const Duration(seconds: 3),
         );
-        Get.find<MainController>().getUser();
-        Get.find<MainController>().update();
+
+        isSeller!
+            ? Get.find<SellerMainController>().getUser()
+            : Get.find<MainController>().getUser();
+        isSeller!
+            ? Get.find<SellerMainController>().getUser()
+            : Get.find<MainController>().update();
         update();
       }).onError((error, stackTrace) {
         CustomSnackbar.errorSnackbar(

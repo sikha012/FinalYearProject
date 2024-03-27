@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:happytails/app/components/pet_profile_card.dart';
 import 'package:happytails/app/utils/constants.dart';
+import 'package:happytails/app/views/views/pet_profile_detail_view.dart';
 
 import '../controllers/pet_profiles_controller.dart';
 
 class PetProfilesView extends GetView<PetProfilesController> {
   const PetProfilesView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,8 +63,37 @@ class PetProfilesView extends GetView<PetProfilesController> {
                     itemCount: controller.petProfiles.length,
                     itemBuilder: (context, index) => SizedBox(
                       height: 150,
-                      child: PetProfileCard(
-                        petProfile: controller.petProfiles[index],
+                      child: Stack(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Get.to(() => const PetProfileDetailView(),
+                                  arguments: {
+                                    'petProfile': controller.petProfiles[index],
+                                  });
+                            },
+                            child: PetProfileCard(
+                              petProfile: controller.petProfiles[index],
+                            ),
+                          ),
+                          Positioned(
+                            right: 5,
+                            top: 50,
+                            child: GestureDetector(
+                              onTap: () {
+                                controller.showDeletePetProfileDialog(
+                                  controller.petProfiles[index].petId ?? 0,
+                                  controller.petProfiles[index].petName ?? '',
+                                );
+                              },
+                              child: const Icon(
+                                Icons.delete_forever,
+                                size: 30,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

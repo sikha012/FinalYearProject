@@ -20,7 +20,7 @@ void main() async {
   runApp(
     KhaltiScope(
       //9862386795
-      publicKey: "test_public_key_65d815af3d214d119cac15fa6910aa6a",
+      publicKey: "test_public_key_b2879854a5c74b8dae7acdb7efd87368",
       builder: (context, navigatorKey) => GetMaterialApp(
         title: "Application",
         navigatorKey: navigatorKey,

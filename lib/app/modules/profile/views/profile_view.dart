@@ -65,12 +65,13 @@ class ProfileView extends GetView<ProfileController> {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: Obx(
-                          () => controller.userDetail.value.profileImage != null
+                          () => controller.userDetail!.value.profileImage !=
+                                  null
                               ? CircleAvatar(
                                   radius: 70,
                                   backgroundImage: NetworkImage(
                                     getImage(
-                                      controller.userDetail.value.profileImage,
+                                      controller.userDetail!.value.profileImage,
                                     ),
                                   ),
                                 )
@@ -91,7 +92,7 @@ class ProfileView extends GetView<ProfileController> {
                       ),
                       Obx(
                         () => Text(
-                          controller.userDetail.value.userName ??
+                          controller.userDetail!.value.userName ??
                               'No user name',
                           style: const TextStyle(
                             fontSize: 25,
@@ -101,7 +102,7 @@ class ProfileView extends GetView<ProfileController> {
                       ),
                       Obx(
                         () => Text(
-                          controller.userDetail.value.userEmail ??
+                          controller.userDetail!.value.userEmail ??
                               'No email found',
                         ),
                       ),

@@ -14,6 +14,11 @@ abstract class Routes {
   static const PET_PROFILES = _Paths.PET_PROFILES;
   static const PRODUCT_DETAIL = _Paths.PRODUCT_DETAIL;
   static const USER_CART = _Paths.USER_CART;
+  static const USER_PRODUCTS = _Paths.USER_PRODUCTS;
+  static const DELIVERIES = _Paths.DELIVERIES;
+  static const SELLER_MAIN = _Paths.SELLER_MAIN;
+  static const SELLER_PRODUCTS = _Paths.SELLER_PRODUCTS;
+  static const SELLER_ORDERS = _Paths.SELLER_ORDERS;
 }
 
 abstract class _Paths {
@@ -29,4 +34,9 @@ abstract class _Paths {
   static const PET_PROFILES = '/pet-profiles';
   static const PRODUCT_DETAIL = '/product-detail';
   static const USER_CART = '/user-cart';
+  static const USER_PRODUCTS = '/user-products';
+  static const DELIVERIES = '/deliveries';
+  static const SELLER_MAIN = '/seller-main';
+  static const SELLER_PRODUCTS = '/seller-products';
+  static const SELLER_ORDERS = '/seller-orders';
 }

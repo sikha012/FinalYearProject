@@ -16,6 +16,12 @@ import '../modules/product_detail/bindings/product_detail_binding.dart';
 import '../modules/product_detail/views/product_detail_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/seller_main/bindings/seller_main_binding.dart';
+import '../modules/seller_main/views/seller_main_view.dart';
+import '../modules/seller_orders/bindings/seller_orders_binding.dart';
+import '../modules/seller_orders/views/seller_orders_view.dart';
+import '../modules/seller_products/bindings/seller_products_binding.dart';
+import '../modules/seller_products/views/seller_products_view.dart';
 import '../modules/sign_in/bindings/sign_in_binding.dart';
 import '../modules/sign_in/views/sign_in_view.dart';
 import '../modules/sign_up/bindings/sign_up_binding.dart';
@@ -85,6 +91,21 @@ class AppPages {
       name: _Paths.USER_CART,
       page: () => const UserCartView(),
       binding: UserCartBinding(),
+    ),
+    GetPage(
+      name: _Paths.SELLER_MAIN,
+      page: () => const SellerMainView(),
+      binding: SellerMainBinding(),
+    ),
+    GetPage(
+      name: _Paths.SELLER_PRODUCTS,
+      page: () => const SellerProductsView(),
+      binding: SellerProductsBinding(),
+    ),
+    GetPage(
+      name: _Paths.SELLER_ORDERS,
+      page: () => const SellerOrdersView(),
+      binding: SellerOrdersBinding(),
     ),
   ];
 }

@@ -25,36 +25,18 @@ class PetProfileCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
+            Hero(
+              tag: 'petProfile+${petProfile.petId}',
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                // boxShadow: [
-                //   BoxShadow(
-                //     color: Colors.grey.shade400,
-                //     spreadRadius: 2,
-                //     blurRadius: 2,
-                //     offset: Offset(0, 2),
-                //   ),
-                // ],
-                border: Border.all(
-                  width: 0.5,
-                ),
-              ),
-              child: Hero(
-                tag: 'product+${petProfile.petId}',
                 child: Image.network(
-                  getImage(
-                    petProfile.petImage,
-                  ),
+                  getImage(petProfile.petImage),
                   width: 100,
                   fit: BoxFit.cover,
                 ),
               ),
             ),
             Container(
-              margin: EdgeInsets.only(left: 20),
               padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,16 +53,16 @@ class PetProfileCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        petProfile.petAge.toString(),
+                        "${petProfile.petAge.toString()} years old",
                         style: const TextStyle(
-                          fontSize: 10,
+                          fontSize: 13,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
                   Text(
-                    'OwnerID: ${petProfile.ownerId ?? ''}',
+                    '${petProfile.recordCount} Records',
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,

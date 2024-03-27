@@ -42,16 +42,16 @@ class MemoryManagement {
   }
 
   // For User Role
-  static String? getAccessRole() {
-    return prefs != null ? prefs!.getString('role') : null;
+  static String? getUserType() {
+    return prefs != null ? prefs!.getString('userType') : null;
   }
 
-  static void setAccessRole(String token) {
-    prefs!.setString('role', token);
+  static void setUserType(String type) {
+    prefs!.setString('userType', type);
   }
 
-  static void removeAccessRole() {
-    prefs!.remove('role');
+  static void removeUserType() {
+    prefs!.remove('userType');
   }
 
   // For Cart

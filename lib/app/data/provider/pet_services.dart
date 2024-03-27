@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:happytails/app/data/models/pet_category.dart';
+import 'package:happytails/app/data/models/pet_history.dart';
 import 'package:happytails/app/data/models/pet_profile.dart';
 import 'package:happytails/app/data/provider/api_provider.dart';
 
@@ -31,7 +33,6 @@ class PetServices extends ApiProvider {
   Future<String> createProfile({
     required String petName,
     required int petAge,
-    required String vaccinationDate,
     required String fileName,
     required Uint8List? imageBytes,
     required int petCategoryId,
@@ -40,7 +41,6 @@ class PetServices extends ApiProvider {
     FormData formData = FormData.fromMap({
       "petName": petName,
       "petAge": petAge,
-      "vaccinationDate": vaccinationDate,
       "petImage": imageBytes != null
           ? MultipartFile.fromBytes(imageBytes, filename: fileName)
           : null,
@@ -66,11 +66,65 @@ class PetServices extends ApiProvider {
     }
   }
 
+  Future<String> createPetHistory({
+    required String eventName,
+    required String eventDescription,
+    required String eventDate,
+    required int petId,
+  }) async {
+    try {
+      final response = await dioJson.post(
+        '/petProfile/history',
+        data: jsonEncode(
+          {
+            "eventName": eventName,
+            "eventDescription": eventDescription,
+            "eventDate": eventDate,
+            "petId": petId,
+          },
+        ),
+      );
+
+      return response.data['message'];
+    } on DioException catch (err) {
+      if (err.response?.statusCode == 400) {
+        return Future.error(err.response?.data['errors'][0]['msg']);
+      } else if (err.response?.statusCode == 409) {
+        return Future.error(err.response?.data['message']);
+      } else if (err.response?.statusCode == 500) {
+        return Future.error(err.response?.data['message']);
+      } else {
+        return Future.error('An error occurred: ${err.message}');
+      }
+    } catch (e) {
+      return Future.error('An unexpected error occurred: $e');
+    }
+  }
+
   Future<List<PetProfile>> getPetProfilesByOwner(int ownerId) async {
     try {
       final response = await dioJson.get('/petProfile/owner/$ownerId');
       return response.data
           .map<PetProfile>((petProfile) => PetProfile.fromJson(petProfile))
+          .toList();
+    } on DioException catch (err) {
+      if (err.response?.statusCode == 404) {
+        return Future.error(err.response?.data['message']);
+      } else if (err.response?.statusCode == 500) {
+        return Future.error(err.response?.data['message']);
+      } else {
+        return Future.error('Error in the code');
+      }
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
+  Future<List<PetHistory>> getHistoryByPetId(int petId) async {
+    try {
+      final response = await dioJson.get('/petProfile/history/$petId');
+      return response.data
+          .map<PetHistory>((petHistory) => PetHistory.fromJson(petHistory))
           .toList();
     } on DioException catch (err) {
       if (err.response?.statusCode == 404) {
@@ -133,6 +187,92 @@ class PetServices extends ApiProvider {
     } catch (e) {
       // Handle any other types of errors
       return "Exception: $e";
+    }
+  }
+
+  Future<String> editPetProfile({
+    required int petAge,
+    required int petId,
+    required String fileName,
+    Uint8List? imageBytes,
+  }) async {
+    FormData formData = FormData.fromMap({
+      "petAge": petAge,
+      "petImage": imageBytes != null
+          ? MultipartFile.fromBytes(imageBytes, filename: fileName)
+          : null,
+    });
+
+    try {
+      debugPrint("Pet Id to update: $petId");
+      String endpoint = '/petProfile/$petId';
+      Response response = await dioMultipart.put(endpoint, data: formData);
+      if (response.statusCode == 201) {
+        var responseData = response.data;
+        if (responseData is Map<String, dynamic> &&
+            responseData.containsKey('message') &&
+            responseData['message'] is String) {
+          return responseData['message'];
+        } else {
+          throw Exception("Unexpected response format");
+        }
+      } else {
+        // Handle non-200 responses
+        return "Error: Server responded with status code ${response.statusCode}";
+      }
+    } on DioException catch (dioError) {
+      if (dioError.response?.statusCode == 401) {
+        return Future.error('401: ${dioError.response?.data['message']}');
+      } else if (dioError.response?.statusCode == 400) {
+        return Future.error('400: ${dioError.response?.data['message']}');
+      } else if (dioError.response?.statusCode == 500) {
+        return Future.error('Internal Server Error');
+      } else {
+        return Future.error('An error occurred: ${dioError.message}');
+      }
+    } catch (e) {
+      // Handle any other types of errors
+      return "Exception: $e";
+    }
+  }
+
+  Future<String> deleteByPetId(int petId) async {
+    try {
+      final response = await dioJson.delete('/petProfile/$petId');
+
+      return response.data['message'];
+    } on DioException catch (err) {
+      if (err.response?.statusCode == 400) {
+        return Future.error(err.response?.data['errors'][0]['msg']);
+      } else if (err.response?.statusCode == 409) {
+        return Future.error(err.response?.data['message']);
+      } else if (err.response?.statusCode == 500) {
+        return Future.error(err.response?.data['message']);
+      } else {
+        return Future.error('An error occurred: ${err.message}');
+      }
+    } catch (e) {
+      return Future.error('An unexpected error occurred: $e');
+    }
+  }
+
+  Future<String> deleteHistoryById(int historyId) async {
+    try {
+      final response = await dioJson.delete('/petProfile/history/$historyId');
+
+      return response.data['message'];
+    } on DioException catch (err) {
+      if (err.response?.statusCode == 400) {
+        return Future.error(err.response?.data['errors'][0]['msg']);
+      } else if (err.response?.statusCode == 409) {
+        return Future.error(err.response?.data['message']);
+      } else if (err.response?.statusCode == 500) {
+        return Future.error(err.response?.data['message']);
+      } else {
+        return Future.error('An error occurred: ${err.message}');
+      }
+    } catch (e) {
+      return Future.error('An unexpected error occurred: $e');
     }
   }
 }

@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:happytails/app/components/customs/custom_button.dart';
 import 'package:happytails/app/components/customs/custom_textfield.dart';
 import 'package:happytails/app/routes/app_pages.dart';
+import 'package:happytails/app/utils/constants.dart';
 
 import '../controllers/sign_up_controller.dart';
 
@@ -81,7 +82,36 @@ class SignUpView extends GetView<SignUpController> {
                         isPassword: true,
                       ),
                       SizedBox(
-                        height: 40,
+                        height: 20,
+                      ),
+                      Obx(
+                        () => Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Checkbox(
+                              side: BorderSide(
+                                style: BorderStyle.solid,
+                                width: 2.5,
+                                color: Constants.primaryColor,
+                              ),
+                              value: controller.isSeller.value,
+                              onChanged: (bool? value) {
+                                controller.updateIsSeller(value);
+                              },
+                            ),
+                            Text(
+                              'I am a seller',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Constants.primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
                       ),
                       CustomButton(
                         label: "Sign Up",

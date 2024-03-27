@@ -2,9 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:happytails/app/data/models/pet_category.dart';
 import 'package:happytails/app/data/models/product.dart';
-import 'package:happytails/app/data/models/product_category.dart';
 import 'package:happytails/app/data/models/seller.dart';
 import 'package:happytails/app/data/models/token.dart';
 import 'package:happytails/app/routes/app_pages.dart';
@@ -13,11 +11,6 @@ import 'package:happytails/app/utils/memory_management.dart';
 import 'package:get/get.dart' as getpackage;
 
 class ApiProvider {
-  var url = "";
-  void getUrl() async {
-    url = await getBaseUrl();
-  }
-
   final Dio dioJson = Dio(
     BaseOptions(
       baseUrl: baseUrlLink,
@@ -148,44 +141,24 @@ class ApiProvider {
     }
   }
 
-  Future<List<PetCategory>> getAllPetCategories() async {
-    try {
-      final response = await dioJson.get('/petCategory');
-      debugPrint(response.toString());
-      debugPrint(response.data.toString());
-      return response.data
-          .map<PetCategory>((petCategory) => PetCategory.fromJson(petCategory))
-          .toList();
-    } on DioException catch (err) {
-      if (err.response?.statusCode == 500) {
-        return Future.error('Internal Server Error');
-      } else {
-        return Future.error('Error in the code');
-      }
-    } catch (e) {
-      return Future.error(e.toString());
-    }
-  }
-
-  Future<List<ProductCategory>> getAllProductCategories() async {
-    try {
-      final response = await dioJson.get('/productCategory');
-      debugPrint(response.toString());
-      debugPrint(response.data.toString());
-      return response.data
-          .map<ProductCategory>(
-              (productCategory) => ProductCategory.fromJson(productCategory))
-          .toList();
-    } on DioException catch (err) {
-      if (err.response?.statusCode == 500) {
-        return Future.error('Internal Server Error');
-      } else {
-        return Future.error('Error in the code');
-      }
-    } catch (e) {
-      return Future.error(e.toString());
-    }
-  }
+  // Future<List<PetCategory>> getAllPetCategories() async {
+  //   try {
+  //     final response = await dioJson.get('/petCategory');
+  //     debugPrint(response.toString());
+  //     debugPrint(response.data.toString());
+  //     return response.data
+  //         .map<PetCategory>((petCategory) => PetCategory.fromJson(petCategory))
+  //         .toList();
+  //   } on DioException catch (err) {
+  //     if (err.response?.statusCode == 500) {
+  //       return Future.error('Internal Server Error');
+  //     } else {
+  //       return Future.error('Error in the code');
+  //     }
+  //   } catch (e) {
+  //     return Future.error(e.toString());
+  //   }
+  // }
 
   Future<List<Seller>> getAllSellers() async {
     try {
@@ -316,6 +289,32 @@ class ApiProvider {
     } catch (e) {
       debugPrint("Exception caught: $e");
       return Future.error(e.toString());
+    }
+  }
+
+  Future<String> deleteProductById({
+    required int productId,
+  }) async {
+    try {
+      Response response = await dioJson.delete('/product/$productId');
+      var responseData = response.data;
+      if (responseData is Map<String, dynamic> &&
+          responseData.containsKey('message') &&
+          responseData['message'] is String) {
+        return responseData['message'];
+      } else {
+        return "Error: Server responded with status code ${response.statusCode}";
+      }
+    } on DioException catch (dioError) {
+      if (dioError.response?.statusCode == 500) {
+        return Future.error(dioError.response?.data['message']);
+      } else if (dioError.response?.statusCode == 404) {
+        return Future.error(dioError.response?.data['message']);
+      } else {
+        return Future.error("Dio Exception: ${dioError.toString()}");
+      }
+    } catch (e) {
+      return "Exception: $e";
     }
   }
 }

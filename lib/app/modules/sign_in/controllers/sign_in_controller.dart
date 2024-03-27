@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:get_ip_address/get_ip_address.dart';
 import 'package:happytails/app/components/customs/custom_progress_indicator.dart';
 import 'package:happytails/app/components/customs/custom_snackbar.dart';
 import 'package:happytails/app/data/provider/auth_services.dart';
 import 'package:happytails/app/routes/app_pages.dart';
 import 'package:happytails/app/utils/memory_management.dart';
-import 'package:network_info_plus/network_info_plus.dart';
 
 class SignInController extends GetxController {
   final count = 0.obs;
@@ -18,26 +16,26 @@ class SignInController extends GetxController {
   TextEditingController passwordController = TextEditingController();
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
     checkUserToken();
-    var ipAddress = await getCurrentIp();
-    debugPrint("Ip is: $ipAddress");
-  }
-
-  Future<String?> getCurrentIp() async {
-    var info = NetworkInfo();
-    var wifiIp = await info.getWifiIP();
-    return wifiIp ?? "No Ip";
   }
 
   void checkUserToken() async {
     isLoading.value = true;
     var accessToken = MemoryManagement.getAccessToken();
     var refreshToken = MemoryManagement.getRefreshToken();
+    var userType = MemoryManagement.getUserType();
+    debugPrint("check type: $userType");
     Future.delayed(const Duration(seconds: 1), () {
       if (accessToken != null && refreshToken != null) {
-        Get.offAllNamed(Routes.MAIN);
+        debugPrint('access token: $accessToken');
+        debugPrint(refreshToken);
+        if (userType == 'seller') {
+          Get.offAllNamed(Routes.SELLER_MAIN);
+        } else {
+          Get.offAllNamed(Routes.MAIN);
+        }
         isLoading.value = false;
       } else {
         isLoading.value = false;
@@ -60,11 +58,17 @@ class SignInController extends GetxController {
       };
       await auth.signIn(data).then((value) {
         FullScreenDialogLoader.cancelDialog();
-        debugPrint(value.accessToken);
+        debugPrint('access token: ${value.accessToken}');
         debugPrint(value.refreshToken);
         MemoryManagement.setAccessToken(value.accessToken ?? '');
         MemoryManagement.setRefreshToken(value.refreshToken ?? '');
-        Get.offAllNamed(Routes.MAIN);
+        MemoryManagement.setUserId(value.user?.userId ?? 0);
+        MemoryManagement.setUserType(value.user?.userType ?? '');
+        if (value.user?.userType == 'seller') {
+          Get.offAllNamed(Routes.SELLER_MAIN);
+        } else {
+          Get.offAllNamed(Routes.MAIN);
+        }
       }).onError((error, stackTrace) {
         FullScreenDialogLoader.cancelDialog();
 

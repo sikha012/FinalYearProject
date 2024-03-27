@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "475144728401",
+    "project_id": "happytails-app",
+    "storage_bucket": "happytails-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:475144728401:android:058806fccc884d24992d70",
+        "android_client_info": {
+          "package_name": "com.example.happytails"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBh5x7tshdNLKlc81zZv60QN4o1kAJnZZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

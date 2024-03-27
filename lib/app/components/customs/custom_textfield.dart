@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CustomTextfield extends StatefulWidget {
   final TextEditingController controller;
@@ -12,6 +13,7 @@ class CustomTextfield extends StatefulWidget {
   final Icon? suffixIcon;
   final VoidCallback? onSuffixIconPress;
   final TextInputAction? textInputAction;
+  final bool isDate;
 
   const CustomTextfield({
     super.key,
@@ -26,6 +28,7 @@ class CustomTextfield extends StatefulWidget {
     this.suffixIcon,
     this.onSuffixIconPress,
     this.textInputAction,
+    this.isDate = false,
   });
 
   @override
@@ -34,10 +37,26 @@ class CustomTextfield extends StatefulWidget {
 
 class _CustomTextfieldState extends State<CustomTextfield> {
   var isObscured = false;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        widget.controller.text = DateFormat('yyyy-MM-dd').format(picked);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 350,
+      height: 45,
       child: TextFormField(
         controller: widget.controller,
         textInputAction: widget.textInputAction,
@@ -49,12 +68,13 @@ class _CustomTextfieldState extends State<CustomTextfield> {
             const TextStyle(
               color: Colors.black,
             ),
+        readOnly: widget.isDate,
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
           contentPadding: widget.contentPadding ??
               const EdgeInsets.symmetric(
-                vertical: 15,
+                vertical: 12,
                 horizontal: 18,
               ),
           label: Text(
@@ -62,29 +82,34 @@ class _CustomTextfieldState extends State<CustomTextfield> {
             style: widget.labelStyle ??
                 const TextStyle(
                   color: Colors.grey,
-                  fontSize: 18,
+                  fontSize: 16.5,
                 ),
           ),
-          suffixIcon: widget.suffixIcon != null
+          suffixIcon: widget.isDate
               ? GestureDetector(
-                  onTap: widget.onSuffixIconPress,
-                  child: widget.suffixIcon,
+                  onTap: () => _selectDate(context),
+                  child: const Icon(Icons.calendar_today, color: Colors.grey),
                 )
-              : widget.isPassword!
+              : widget.suffixIcon != null
                   ? GestureDetector(
-                      child: Icon(
-                        isObscured
-                            ? Icons.visibility_off_rounded
-                            : Icons.visibility_rounded,
-                        color: Colors.grey,
-                      ),
-                      onTap: () {
-                        setState(() {
-                          isObscured = !isObscured;
-                        });
-                      },
+                      onTap: widget.onSuffixIconPress,
+                      child: widget.suffixIcon,
                     )
-                  : null,
+                  : widget.isPassword!
+                      ? GestureDetector(
+                          child: Icon(
+                            isObscured
+                                ? Icons.visibility_off_rounded
+                                : Icons.visibility_rounded,
+                            color: Colors.grey,
+                          ),
+                          onTap: () {
+                            setState(() {
+                              isObscured = !isObscured;
+                            });
+                          },
+                        )
+                      : null,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(18),
             borderSide: BorderSide(
@@ -118,6 +143,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
             ),
           ),
         ),
+        onTap: widget.isDate ? () => _selectDate(context) : null,
       ),
     );
   }

@@ -145,13 +145,13 @@ class EditProfileView extends GetView<ProfileController> {
                                         controller.selectedBytes.value!,
                                       ),
                                     )
-                                  : controller.userDetail.value.profileImage !=
+                                  : controller.userDetail!.value.profileImage !=
                                           null
                                       ? CircleAvatar(
                                           radius: 95,
                                           backgroundImage: NetworkImage(
                                             getImage(
-                                              controller.userDetail.value
+                                              controller.userDetail!.value
                                                   .profileImage,
                                             ),
                                           ),

@@ -7,6 +7,7 @@ import 'package:happytails/app/routes/app_pages.dart';
 class SignUpController extends GetxController {
   final count = 0.obs;
   var isLoading = false.obs;
+  var isSeller = false.obs;
   AuthService auth = AuthService();
   GlobalKey<FormState> signUpFormKey = GlobalKey<FormState>();
   TextEditingController userNameController = TextEditingController();
@@ -15,6 +16,13 @@ class SignUpController extends GetxController {
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController contactController = TextEditingController();
+
+  void updateIsSeller(bool? value) {
+    if (value != null) {
+      isSeller.value = value;
+      update();
+    }
+  }
 
   Future<void> onSignUp() async {
     if (signUpFormKey.currentState!.validate()) {
@@ -40,6 +48,7 @@ class SignUpController extends GetxController {
               "password": passwordController.text,
               "location": addressController.text,
               "contact": contactController.text,
+              "userType": isSeller.value ? "seller" : "user",
             };
             await auth.signUp(userData).then((value) {
               CustomSnackbar.successSnackbar(

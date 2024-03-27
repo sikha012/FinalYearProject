@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
-import 'package:happytails/app/data/models/token.dart';
+import 'package:happytails/app/data/models/sign_in_response.dart';
 import 'package:happytails/app/data/provider/api_provider.dart';
 
 class AuthService extends ApiProvider {
-  Future<Token> signIn(Map<String, dynamic> signInMap) async {
+  Future<SignInResponse> signIn(Map<String, dynamic> signInMap) async {
     try {
       final response = await dioJson.post('/login', data: signInMap);
-      return tokenFromJson(response.toString());
+      return signInResponseFromJson(response.toString());
     } on DioException catch (err) {
       if (err.response?.statusCode == 401) {
         return Future.error(err.response?.data['message']);
