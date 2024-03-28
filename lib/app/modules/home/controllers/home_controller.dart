@@ -9,11 +9,16 @@ import 'package:http/http.dart' as http;
 class HomeController extends GetxController {
   final count = 0.obs;
   final RxList<Product> products = RxList<Product>();
+  final RxInt notificationCount = 0.obs;
 
   @override
   void onInit() {
     super.onInit();
     getProducts();
+  }
+
+  void resetNotificationCount() {
+    notificationCount.value = 0;
   }
 
   void getProducts() async {

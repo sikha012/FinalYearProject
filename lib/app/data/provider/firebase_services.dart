@@ -1,9 +1,10 @@
 import 'dart:convert';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get.dart';
+import 'package:happytails/app/modules/home/controllers/home_controller.dart';
+import 'package:happytails/app/utils/memory_management.dart';
 
 class FirebaseServices {
   final _firebaseMessaging = FirebaseMessaging.instance;
@@ -17,83 +18,83 @@ class FirebaseServices {
 
   final _localNotifications = FlutterLocalNotificationsPlugin();
 
-  void handleMessage(RemoteMessage? message) {
-    if (message == null) return;
-    // navigatorKey.currentState
-    //     ?.pushNamed(Routes.ORDERS_DELIVERY, arguments: message);
-    // Get.toNamed(Routes.ORDERS_DELIVERY, arguments: message);
-    // if (message.data['messageType'] == 'deliveryStatus') {
-    //   Get.find<OrdersPageController>()
-    //       .getOrderedProductsForUser(LocalStorage.getUserId() ?? 0);
-    //   Get.find<OrdersPageController>().update();
-    //   Get.toNamed(Routes.ORDERS_PAGE);
-    // } else {
-    //   Get.toNamed(Routes.MAIN);
-    // }
+  Future<void> _saveAndShowNotification(RemoteMessage message) async {
+    // Save the notification to local storage
+    MemoryManagement.saveNotification(message.data);
+
+    increaseNotificationCount();
+
+    // Show the notification using local_notifications plugin
+    final notification = message.notification;
+    if (notification != null) {
+      _localNotifications.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            _androidChannel.id,
+            _androidChannel.name,
+            channelDescription: _androidChannel.description,
+            icon: '@drawable/applogo',
+          ),
+        ),
+        payload: jsonEncode(message.toMap()),
+      );
+    }
   }
 
-  Future initPushNotifications() async {
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+  void increaseNotificationCount() {
+    final controller = Get.find<HomeController>();
+    controller.notificationCount.value++;
+  }
 
-    FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
-    FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
-    //FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
-    FirebaseMessaging.onMessage.listen((message) {
-      final notification = message.notification;
-      if (notification == null) {
-        return;
-      } else {
-        _localNotifications.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              _androidChannel.id,
-              _androidChannel.name,
-              channelDescription: _androidChannel.description,
-              icon: '@drawable/applogo',
-            ),
-          ),
-          payload: jsonEncode(message.toMap()),
-        );
+  Future<void> initNotifications() async {
+    await _firebaseMessaging.requestPermission();
+    final fcmToken = await _firebaseMessaging.getToken();
+    debugPrint("FCM Token: $fcmToken");
+
+    // Initialize local notifications
+    await initLocalNotifications();
+
+    // Handle notifications that are received while the app is in the foreground
+    FirebaseMessaging.onMessage.listen(_saveAndShowNotification);
+
+    // Handle notifications that are received while the app is in the background or terminated
+    FirebaseMessaging.onMessageOpenedApp.listen(_saveAndShowNotification);
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message != null) {
+        _saveAndShowNotification(message);
       }
     });
+
+    // Optional: Set up a background message handler if you need to handle background messages
+    // FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
   }
 
-//   Future initLocalNotifications(int userId) async {
   Future initLocalNotifications() async {
-    const android = AndroidInitializationSettings('@drawable/applogo');
-    const settings = InitializationSettings(android: android);
+    const androidSettings = AndroidInitializationSettings('@drawable/applogo');
+    const settings = InitializationSettings(android: androidSettings);
 
     await _localNotifications.initialize(
       settings,
       onDidReceiveNotificationResponse: (notificationResponse) {
-        final payload = notificationResponse.payload;
-        final message = RemoteMessage.fromMap(jsonDecode(payload!));
-        handleMessage(message);
+        if (notificationResponse.payload != null) {
+          final message =
+              RemoteMessage.fromMap(jsonDecode(notificationResponse.payload!));
+          _saveAndShowNotification(message);
+        }
       },
     );
+
     final platform = _localNotifications.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>();
     await platform?.createNotificationChannel(_androidChannel);
-    // Get.find<OrdersPageController>().getOrderedProductsForUser(userId);
-    // Get.find<OrdersPageController>().update();
   }
+}
 
-//   Future<void> initNotifications(int currentUserId) async {
-  Future<void> initNotifications() async {
-    await _firebaseMessaging.requestPermission();
-    final fcmToken = await _firebaseMessaging.getToken();
-    debugPrint("Token $fcmToken");
-    //LocalStorage.setFcmToken(fcmToken ?? 'No Token');
-    initPushNotifications();
-    initLocalNotifications();
-    //Get.put(OrdersPageController()).getOrderedProductsForUser(currentUserId);
-  }
+// Uncomment and implement the background message handler if needed
+
+Future<void> _backgroundMessageHandler(RemoteMessage message) async {
+  MemoryManagement.saveNotification(message.data);
 }
