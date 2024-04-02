@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:happytails/app/data/models/order_detail_model.dart';
 import 'package:happytails/app/utils/asset_files.dart';
+import 'package:happytails/app/data/models/order_detail_model.dart';
+import 'package:happytails/app/utils/asset_files.dart';
 import 'package:happytails/app/utils/constants.dart';
 
 import '../controllers/seller_orders_controller.dart';
