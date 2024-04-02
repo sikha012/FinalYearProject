@@ -97,6 +97,7 @@ class SellerProductsController extends GetxController {
           context: Get.context,
           title: 'Error',
           message: error.toString(),
+          duration: Duration(seconds: 60),
         );
       });
 

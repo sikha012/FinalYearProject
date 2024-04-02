@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:happytails/app/data/models/sign_in_response.dart';
+import 'package:happytails/app/data/models/sign_up_response.dart';
 import 'package:happytails/app/data/provider/api_provider.dart';
 
 class AuthService extends ApiProvider {
@@ -22,14 +23,14 @@ class AuthService extends ApiProvider {
     }
   }
 
-  Future<String> signUp(Map<String, dynamic> userInfo) async {
+  Future<SignUpResponse> signUp(Map<String, dynamic> userInfo) async {
     try {
       final response = await dioJson.post('/register', data: userInfo);
 
-      return response.data['message'];
+      return SignUpResponse.fromJson(response.data);
     } on DioException catch (err) {
       if (err.response?.statusCode == 400) {
-        return Future.error(err.response?.data['errors'][0]['msg']);
+        return Future.error(err.response?.data['errors'][0]['message']);
       } else if (err.response?.statusCode == 409) {
         return Future.error(err.response?.data['message']);
       } else if (err.response?.statusCode == 500) {
@@ -42,11 +43,38 @@ class AuthService extends ApiProvider {
     }
   }
 
-  Future<String> verifyOTP(String email, String otp) async {
+  Future<String> resendOTP(String email, String userName) async {
+    try {
+      final response = await dioJson.post(
+        '/resend-otp',
+        data: {'email': email, 'username': userName},
+      );
+      return response.data['message'];
+    } on DioException catch (err) {
+      if (err.response?.statusCode == 400) {
+        return Future.error(err.response?.data['message'] ?? 'Invalid OTP');
+      } else if (err.response?.statusCode == 401) {
+        // OTP might have expired or is incorrect
+        return Future.error(
+            err.response?.data['message'] ?? 'OTP Expired or Incorrect');
+      } else if (err.response?.statusCode == 500) {
+        // Handle server errors
+        return Future.error('Internal Server Error');
+      } else {
+        // Generic error handling
+        return Future.error('An error occurred: ${err.message}');
+      }
+    } catch (e) {
+      // Catch any other errors
+      return Future.error('An unexpected error occurred: $e');
+    }
+  }
+
+  Future<String> verifyOTP(String email, String otp, String hash) async {
     try {
       final response = await dioJson.post(
         '/verify-otp',
-        data: {'email': email, 'otp': otp},
+        data: {'email': email, 'otp': otp, 'hash': hash},
       );
       return response.data['message'];
     } on DioException catch (err) {

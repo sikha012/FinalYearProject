@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:happytails/app/components/customs/custom_button.dart';
+import 'package:happytails/app/modules/order_status/views/order_status_view.dart';
 import 'package:happytails/app/routes/app_pages.dart';
 import 'package:happytails/app/utils/asset_files.dart';
 import 'package:happytails/app/utils/constants.dart';
@@ -223,7 +224,7 @@ class ProfileView extends GetView<ProfileController> {
                         ),
                       ),
                       onTap: () {
-                        Get.to(() => const PaymentSummaryView());
+                        Get.to(() => const OrderStatusView());
                       },
                     )
                   ],

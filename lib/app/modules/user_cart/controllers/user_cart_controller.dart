@@ -222,12 +222,19 @@ class UserCartController extends GetxController {
 
   void createPayment({required grandTotal, required token}) async {
     try {
+      List<String> sellerFCMs = [];
+      for (CartProduct c in selectedCartProducts) {
+        sellerFCMs.add(c.product.sellerToken ?? "Null");
+        debugPrint(c.product.sellerToken);
+      }
+
       await order
           .createPayment(
         userId: MemoryManagement.getUserId() ?? 0,
         orderId: orderMade?.orderId ?? 0,
         grandTotal: grandTotal,
         token: token,
+        sellerFCMs: sellerFCMs,
       )
           .then((value) async {
         CustomSnackbar.successSnackbar(

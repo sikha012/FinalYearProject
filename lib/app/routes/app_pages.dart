@@ -10,6 +10,8 @@ import '../modules/offers/bindings/offers_binding.dart';
 import '../modules/offers/views/offers_view.dart';
 import '../modules/onboarding_screen/bindings/onboarding_screen_binding.dart';
 import '../modules/onboarding_screen/views/onboarding_screen_view.dart';
+import '../modules/order_status/bindings/order_status_binding.dart';
+import '../modules/order_status/views/order_status_view.dart';
 import '../modules/pet_profiles/bindings/pet_profiles_binding.dart';
 import '../modules/pet_profiles/views/pet_profiles_view.dart';
 import '../modules/product_detail/bindings/product_detail_binding.dart';
@@ -106,6 +108,11 @@ class AppPages {
       name: _Paths.SELLER_ORDERS,
       page: () => const SellerOrdersView(),
       binding: SellerOrdersBinding(),
+    ),
+    GetPage(
+      name: _Paths.ORDER_STATUS,
+      page: () => const OrderStatusView(),
+      binding: OrderStatusBinding(),
     ),
   ];
 }

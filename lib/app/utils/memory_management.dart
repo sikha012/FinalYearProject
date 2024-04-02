@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MemoryManagement {
@@ -5,6 +7,40 @@ class MemoryManagement {
   static Future<bool> init() async {
     prefs = await SharedPreferences.getInstance();
     return true;
+  }
+
+  static List<Map<String, dynamic>> getNotifications() {
+    String? notificationsJson =
+        prefs != null ? prefs!.getString('notifications') : null;
+    if (notificationsJson != null) {
+      List<dynamic> jsonList = jsonDecode(notificationsJson);
+      return List<Map<String, dynamic>>.from(jsonList);
+    } else {
+      return [];
+    }
+  }
+
+  static void saveNotification(Map<String, dynamic> notification) {
+    List<Map<String, dynamic>> notifications = getNotifications();
+    notifications.add(notification);
+    prefs!.setString('notifications', jsonEncode(notifications));
+  }
+
+  static void removeNotifications() {
+    prefs!.remove('notifications');
+  }
+
+  // For FCM Token
+  static String? getFCMToken() {
+    return prefs != null ? prefs!.getString('fCMToken') : null;
+  }
+
+  static void setFCMToken(String fCMToken) {
+    prefs!.setString('fCMToken', fCMToken);
+  }
+
+  static void removeFCMToken() {
+    prefs!.remove('fCMToken');
   }
 
   // For Access Token
