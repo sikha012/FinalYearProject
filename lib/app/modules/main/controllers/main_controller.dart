@@ -1,14 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:happytails/app/components/customs/custom_snackbar.dart';
 import 'package:happytails/app/data/models/user_model.dart';
 import 'package:happytails/app/data/provider/user_services.dart';
-import 'package:happytails/app/modules/categories/views/categories_view.dart';
+import 'package:happytails/app/modules/home/controllers/home_controller.dart';
 import 'package:happytails/app/modules/home/views/home_view.dart';
 import 'package:happytails/app/modules/offers/views/offers_view.dart';
 import 'package:happytails/app/modules/profile/views/profile_view.dart';
 import 'package:happytails/app/utils/constants.dart';
 import 'package:happytails/app/utils/memory_management.dart';
+import 'package:happytails/app/views/views/notifications_view.dart';
 
 class MainController extends GetxController {
   final count = 0.obs;
@@ -20,7 +22,7 @@ class MainController extends GetxController {
   final pages = const [
     HomeView(),
     OffersView(),
-    CategoriesView(),
+    NotificationsView(),
     ProfileView(),
   ];
 
@@ -69,7 +71,38 @@ class MainController extends GetxController {
       icon: Container(
         padding: const EdgeInsets.all(5),
         color: Constants.primaryColor,
-        child: const Icon(Icons.category),
+        child: Stack(
+          children: [
+            const Icon(CupertinoIcons.bell_fill),
+            Positioned(
+              right: 0,
+              top: 0,
+              child: Container(
+                width: 17,
+                height: 17,
+                decoration: BoxDecoration(
+                  color: Constants.tertiaryColor,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Obx(
+                  () => Center(
+                    child: Text(
+                      Get.put(HomeController())
+                          .notificationCount
+                          .value
+                          .toString(),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       activeIcon: Container(
         padding: const EdgeInsets.all(5),
@@ -78,11 +111,11 @@ class MainController extends GetxController {
           color: Colors.white,
         ),
         child: const Icon(
-          Icons.category,
+          CupertinoIcons.bell_fill,
           color: Constants.primaryColor,
         ),
       ),
-      label: "Categories",
+      label: "Notifications",
       backgroundColor: Constants.primaryColor,
     ),
     BottomNavigationBarItem(

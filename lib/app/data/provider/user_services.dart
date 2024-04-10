@@ -67,4 +67,25 @@ class UserServices extends ApiProvider {
       return "Exception: $e";
     }
   }
+
+  Future<void> updateFCMToken(int userId, String newToken) async {
+    try {
+      final response = await dioJson.post(
+        '/updateFCMtoken/$userId',
+        data: {'token': newToken},
+      );
+      if (response.statusCode != 200) {
+        throw Exception('Failed to update FCM token');
+      }
+    } on DioException catch (dioError) {
+      if (dioError.response != null) {
+        throw Exception(
+            'Dio error: ${dioError.response?.data['message'] ?? 'Unknown error'}');
+      } else {
+        throw Exception('Dio error: ${dioError.message}');
+      }
+    } catch (e) {
+      throw Exception('Error updating FCM token: $e');
+    }
+  }
 }

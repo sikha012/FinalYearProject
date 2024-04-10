@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:happytails/app/modules/home/controllers/home_controller.dart';
 
 import '../controllers/main_controller.dart';
 
@@ -27,6 +28,9 @@ class MainView extends GetView<MainController> {
             selectedFontSize: 14,
             currentIndex: controller.currentPageIndex.value,
             onTap: (index) {
+              if (controller.currentPageIndex.value == 2) {
+                Get.find<HomeController>().resetNotificationCount();
+              }
               controller.onPageSelected(index);
             },
             items: controller.navbarItems,

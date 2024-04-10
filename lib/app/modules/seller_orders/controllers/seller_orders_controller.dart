@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:happytails/app/data/models/order_detail_model.dart';
+import 'package:happytails/app/data/models/product.dart';
 import 'package:happytails/app/data/provider/order_services.dart';
 import 'package:happytails/app/data/provider/seller_services.dart';
+import 'package:happytails/app/modules/seller_products/controllers/seller_products_controller.dart';
 import 'package:happytails/app/utils/memory_management.dart';
 
 class SellerOrdersController extends GetxController {
@@ -12,10 +14,12 @@ class SellerOrdersController extends GetxController {
   SellerServices sellerServices = SellerServices();
 
   RxList<OrderDetailModel> orders = RxList<OrderDetailModel>();
+  RxList<Product> sellerProducts = RxList<Product>();
   @override
   void onInit() {
     super.onInit();
     getSoldProductsForUser();
+    sellerProducts = Get.find<SellerProductsController>().products;
   }
 
   void getSoldProductsForUser() async {
@@ -94,7 +98,7 @@ class SellerOrdersController extends GetxController {
   }
 
   void onOrderTap(OrderDetailModel order) async {
-    if (order.status != 'Shipped') {
+    if (order.status == 'Processing') {
       isLoading.value = true;
       updateOrderDeliveryStatus(
         orderDetailId: order.orderdetailId ?? 0,
@@ -102,7 +106,6 @@ class SellerOrdersController extends GetxController {
         userFCM: order.token ?? '',
         productName: order.productName ?? '',
       );
-      // Update the order's status locally
       order.status = 'Shipped';
       isLoading.value = false;
       update(); // Refresh the UI

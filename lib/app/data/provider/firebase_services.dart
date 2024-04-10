@@ -3,13 +3,16 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:happytails/app/data/provider/user_services.dart';
 import 'package:happytails/app/modules/home/controllers/home_controller.dart';
+import 'package:happytails/app/modules/main/controllers/main_controller.dart';
 import 'package:happytails/app/modules/order_status/controllers/order_status_controller.dart';
 import 'package:happytails/app/modules/seller_orders/controllers/seller_orders_controller.dart';
 import 'package:happytails/app/routes/app_pages.dart';
 import 'package:happytails/app/utils/memory_management.dart';
 
 class FirebaseServices {
+  UserServices userServices = UserServices();
   final _firebaseMessaging = FirebaseMessaging.instance;
 
   final _androidChannel = const AndroidNotificationChannel(
@@ -67,6 +70,12 @@ class FirebaseServices {
     debugPrint("FCM Token: $fcmToken");
     MemoryManagement.setFCMToken(fcmToken ?? 'Null');
 
+    _firebaseMessaging.onTokenRefresh.listen((newToken) {
+      MemoryManagement.setFCMToken(newToken);
+      userServices.updateFCMToken(MemoryManagement.getUserId() ?? 0, newToken);
+      debugPrint("FCM Token refreshed: $newToken");
+    });
+
     // Initialize local notifications
     const androidSettings = AndroidInitializationSettings('@drawable/applogo');
     final settings = InitializationSettings(android: androidSettings);
@@ -113,6 +122,17 @@ class FirebaseServices {
         Get.toNamed(Routes.ORDER_STATUS);
       } else {
         var controller = Get.put(OrderStatusController());
+        controller.update();
+        Get.toNamed(Routes.ORDER_STATUS);
+      }
+    } else if (message.data['type'] == 'reminder' && Get.context != null) {
+      if (Get.isRegistered<HomeController>()) {
+        final HomeController controller = Get.find<HomeController>();
+        controller.update();
+        //Get.to(() => const NotificationsView());
+        Get.find<MainController>().currentPageIndex.value = 2;
+      } else {
+        var controller = Get.put(HomeController());
         controller.update();
         Get.toNamed(Routes.ORDER_STATUS);
       }

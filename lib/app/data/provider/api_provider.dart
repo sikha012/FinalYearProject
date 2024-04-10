@@ -141,24 +141,49 @@ class ApiProvider {
     }
   }
 
-  // Future<List<PetCategory>> getAllPetCategories() async {
-  //   try {
-  //     final response = await dioJson.get('/petCategory');
-  //     debugPrint(response.toString());
-  //     debugPrint(response.data.toString());
-  //     return response.data
-  //         .map<PetCategory>((petCategory) => PetCategory.fromJson(petCategory))
-  //         .toList();
-  //   } on DioException catch (err) {
-  //     if (err.response?.statusCode == 500) {
-  //       return Future.error('Internal Server Error');
-  //     } else {
-  //       return Future.error('Error in the code');
-  //     }
-  //   } catch (e) {
-  //     return Future.error(e.toString());
-  //   }
-  // }
+  Future<List<Product>> getFilteredProducts({
+    int? productCategoryId,
+    int? petCategoryId,
+    double? minPrice,
+    double? maxPrice,
+    String? productName,
+  }) async {
+    final Map<String, dynamic> queryParameters = {};
+
+    if (productCategoryId != null) {
+      queryParameters['productCategoryId'] = productCategoryId.toString();
+    }
+    if (petCategoryId != null) {
+      queryParameters['petCategoryId'] = petCategoryId.toString();
+    }
+    if (minPrice != null) {
+      queryParameters['minPrice'] = minPrice.toString();
+    }
+    if (maxPrice != null) {
+      queryParameters['maxPrice'] = maxPrice.toString();
+    }
+    if (productName != null && productName.isNotEmpty) {
+      queryParameters['productName'] = productName;
+    }
+
+    try {
+      final response = await dioJson.post(
+        '/product/filter',
+        data: queryParameters,
+      );
+      List<Product> products = List<Product>.from(
+          response.data.map((model) => Product.fromJson(model)));
+      return products;
+    } on DioException catch (err) {
+      if (err.response?.statusCode == 500) {
+        throw Exception('Internal Server Error');
+      } else {
+        throw Exception('Error in the code');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 
   Future<List<Seller>> getAllSellers() async {
     try {
@@ -224,21 +249,6 @@ class ApiProvider {
       return Future.error(e.toString());
     }
   }
-  // if (response.statusCode == 201) {
-  //   var result = response.data;
-  //   debugPrint(result);
-  //   if (result is Map<String, dynamic> &&
-  //       result.containsKey('message') &&
-  //       result['message'] is String) {
-  //     debugPrint(result['message']);
-  //     return result['message'];
-  //   } else {
-  //     return Future.error("Unexpected response format");
-  //   }
-  // } else {
-  //   debugPrint("Image upload failed with status: ${response.statusCode}");
-  //   return response.data['message'];
-  // }
 
   Future<String> updateProduct({
     required int productId,

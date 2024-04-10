@@ -46,7 +46,7 @@ class SellerOrdersView extends GetView<SellerOrdersController> {
                           onTap: () => controller.onOrderTap(order),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: order.status == 'Shipped'
+                              color: order.status != 'Processing'
                                   ? Colors.grey
                                   : Colors.white,
                               borderRadius: BorderRadius.circular(10),

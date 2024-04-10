@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:happytails/app/components/customs/custom_button.dart';
+import 'package:happytails/app/modules/main/controllers/main_controller.dart';
 import 'package:happytails/app/modules/order_status/views/order_status_view.dart';
+import 'package:happytails/app/modules/seller_main/controllers/seller_main_controller.dart';
 import 'package:happytails/app/routes/app_pages.dart';
 import 'package:happytails/app/utils/asset_files.dart';
 import 'package:happytails/app/utils/constants.dart';
 import 'package:happytails/app/utils/memory_management.dart';
 import 'package:happytails/app/views/views/edit_profile_view.dart';
 import 'package:happytails/app/views/views/payment_summary_view.dart';
+import 'package:happytails/app/views/views/seller_orders_summary_view.dart';
 
 import '../controllers/profile_controller.dart';
 
@@ -146,50 +149,56 @@ class ProfileView extends GetView<ProfileController> {
             ),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.pets,
-                          color: Color(0xFF8C8C8C),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "My Pets",
-                          style: TextStyle(
-                            color: Color(0xFF8C8C8C),
-                            fontSize: 18,
+                controller.userType == 'seller'
+                    ? SizedBox.shrink()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: const [
+                              Icon(
+                                Icons.pets,
+                                color: Color(0xFF8C8C8C),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "My Pets",
+                                style: TextStyle(
+                                  color: Color(0xFF8C8C8C),
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(0xFFEEEEEE),
-                        ),
-                        child: Icon(
-                          CupertinoIcons.forward,
-                          color: Color(0xFF8C8C8C),
-                        ),
+                          GestureDetector(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color(0xFFEEEEEE),
+                              ),
+                              child: Icon(
+                                CupertinoIcons.forward,
+                                color: Color(0xFF8C8C8C),
+                              ),
+                            ),
+                            onTap: () {
+                              Get.toNamed(Routes.PET_PROFILES);
+                            },
+                          )
+                        ],
                       ),
-                      onTap: () {
-                        Get.toNamed(Routes.PET_PROFILES);
-                      },
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Divider(
-                  color: Color(0xFFEEEEEE),
-                ),
+                controller.userType == 'seller'
+                    ? SizedBox.shrink()
+                    : SizedBox(
+                        height: 5,
+                      ),
+                controller.userType == 'seller'
+                    ? SizedBox.shrink()
+                    : Divider(
+                        color: Color(0xFFEEEEEE),
+                      ),
                 SizedBox(
                   height: 5,
                 ),
@@ -206,7 +215,9 @@ class ProfileView extends GetView<ProfileController> {
                           width: 10,
                         ),
                         Text(
-                          "My Orders",
+                          controller.userType == 'seller'
+                              ? "Orders"
+                              : "My Orders",
                           style: TextStyle(
                             color: Color(0xFF8C8C8C),
                             fontSize: 18,
@@ -224,7 +235,9 @@ class ProfileView extends GetView<ProfileController> {
                         ),
                       ),
                       onTap: () {
-                        Get.to(() => const OrderStatusView());
+                        controller.userType == 'seller'
+                            ? Get.to(() => const SellerOrdersSummaryView())
+                            : Get.to(() => const OrderStatusView());
                       },
                     )
                   ],
@@ -238,46 +251,53 @@ class ProfileView extends GetView<ProfileController> {
                 SizedBox(
                   height: 5,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.shopping_cart,
-                          color: Color(0xFF8C8C8C),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "My Cart",
-                          style: TextStyle(
-                            color: Color(0xFF8C8C8C),
-                            fontSize: 18,
+                controller.userType == 'seller'
+                    ? SizedBox.shrink()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: const [
+                              Icon(
+                                Icons.shopping_cart,
+                                color: Color(0xFF8C8C8C),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "My Cart",
+                                style: TextStyle(
+                                  color: Color(0xFF8C8C8C),
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: Color(0xFFEEEEEE)),
-                        child: Icon(
-                          CupertinoIcons.forward,
-                          color: Color(0xFF8C8C8C),
-                        ),
+                          GestureDetector(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0xFFEEEEEE)),
+                              child: Icon(
+                                CupertinoIcons.forward,
+                                color: Color(0xFF8C8C8C),
+                              ),
+                            ),
+                            onTap: () {},
+                          )
+                        ],
                       ),
-                      onTap: () {},
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Divider(
-                  color: Color(0xFFEEEEEE),
-                ),
+                controller.userType == 'seller'
+                    ? SizedBox.shrink()
+                    : SizedBox(
+                        height: 5,
+                      ),
+                controller.userType == 'seller'
+                    ? SizedBox.shrink()
+                    : Divider(
+                        color: Color(0xFFEEEEEE),
+                      ),
                 SizedBox(
                   height: 5,
                 ),
@@ -285,7 +305,7 @@ class ProfileView extends GetView<ProfileController> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      children: [
+                      children: const [
                         Icon(
                           Icons.info,
                           color: Color(0xFF8C8C8C),
@@ -328,7 +348,7 @@ class ProfileView extends GetView<ProfileController> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      children: [
+                      children: const [
                         Icon(
                           Icons.privacy_tip,
                           color: Color(0xFF8C8C8C),
