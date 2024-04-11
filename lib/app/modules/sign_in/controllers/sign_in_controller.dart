@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:happytails/app/components/customs/custom_progress_indicator.dart';
@@ -15,10 +16,13 @@ class SignInController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  dynamic token = '';
+
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     checkUserToken();
+    token = await FirebaseMessaging.instance.getToken();
   }
 
   void checkUserToken() async {
@@ -39,11 +43,11 @@ class SignInController extends GetxController {
         isLoading.value = false;
       } else {
         isLoading.value = false;
-        CustomSnackbar.infoSnackbar(
-          context: Get.context,
-          title: 'Info',
-          message: 'Login expired. Please sign in again',
-        );
+        // CustomSnackbar.infoSnackbar(
+        //   context: Get.context,
+        //   title: 'Info',
+        //   message: 'Login expired. Please sign in again',
+        // );
       }
     });
   }
@@ -56,6 +60,7 @@ class SignInController extends GetxController {
         Map<String, dynamic> data = {
           "email": emailController.text,
           "password": passwordController.text,
+          'token': token,
         };
         await auth.signIn(data).then((value) {
           FullScreenDialogLoader.cancelDialog();

@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
+import 'package:happytails/app/components/customs/custom_snackbar.dart';
 import 'package:happytails/app/data/models/sign_in_response.dart';
 import 'package:happytails/app/data/models/sign_up_response.dart';
 import 'package:happytails/app/data/provider/api_provider.dart';
@@ -12,7 +14,30 @@ class AuthService extends ApiProvider {
       if (err.response?.statusCode == 401) {
         return Future.error(err.response?.data['message']);
       } else if (err.response?.statusCode == 400) {
-        return Future.error(err.response?.data['errors'][0]['msg']);
+        return Future.error(err.response?.data['errors'][0]['message']);
+      } else if (err.response?.statusCode == 500) {
+        return Future.error('Internal Server Error');
+      } else {
+        return Future.error('An error occurred: ${err.message}');
+      }
+    } catch (e) {
+      return Future.error('An unexpected error occurred: $e');
+    }
+  }
+
+  Future<void> signOut() async {
+    try {
+      final response = await dioJson.post('/logout');
+      CustomSnackbar.successSnackbar(
+        context: Get.context,
+        title: 'Logged',
+        message: response.data['message'],
+      );
+    } on DioException catch (err) {
+      if (err.response?.statusCode == 401) {
+        return Future.error(err.response?.data['message']);
+      } else if (err.response?.statusCode == 400) {
+        return Future.error(err.response?.data['errors'][0]['message']);
       } else if (err.response?.statusCode == 500) {
         return Future.error('Internal Server Error');
       } else {

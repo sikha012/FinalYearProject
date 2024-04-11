@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:happytails/app/components/customs/custom_button.dart';
+import 'package:happytails/app/components/customs/custom_snackbar.dart';
 import 'package:happytails/app/components/customs/custom_textfield.dart';
 import 'package:happytails/app/routes/app_pages.dart';
 import 'package:happytails/app/utils/constants.dart';
@@ -180,6 +181,21 @@ class SignUpView extends GetView<SignUpController> {
                           onPressed: () {
                             if (controller.signUpFormKey.currentState!
                                 .validate()) {
+                              if (controller.userNameController.text
+                                          .split(' ')
+                                          .length >=
+                                      3 ||
+                                  controller.userNameController.text
+                                          .split(' ')
+                                          .length <=
+                                      1) {
+                                CustomSnackbar.errorSnackbar(
+                                  context: Get.context,
+                                  title: 'Invalid user name!',
+                                  message: "Your name must be only two words",
+                                );
+                                return;
+                              }
                               controller.onSignUp().then((_) {
                                 Get.to(() => VerifyEmailView(), arguments: {
                                   'email': controller.emailController.text,

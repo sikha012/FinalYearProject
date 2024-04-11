@@ -40,7 +40,7 @@ class ApiProvider {
           return handler.next(options);
         },
         onError: ((error, handler) async {
-          if (error.response?.statusCode == 401) {
+          if (error.response?.statusCode == 403) {
             final newAccessToken = await refreshToken();
             if (newAccessToken != null) {
               dioJson.options.headers["Authorization"] =
@@ -61,7 +61,7 @@ class ApiProvider {
           return handler.next(options);
         },
         onError: ((error, handler) async {
-          if (error.response?.statusCode == 401) {
+          if (error.response?.statusCode == 403) {
             final newAccessToken = await refreshToken();
             if (newAccessToken != null) {
               dioMultipart.options.headers["Authorization"] =
@@ -74,13 +74,13 @@ class ApiProvider {
         }),
       ),
     );
-    // dioJson.interceptors.add(
-    //   LogInterceptor(
-    //     request: true,
-    //     requestBody: true,
-    //     responseBody: true,
-    //   ),
-    // );
+    dioJson.interceptors.add(
+      LogInterceptor(
+        request: true,
+        requestBody: true,
+        responseBody: true,
+      ),
+    );
   }
 
   Future<String?> refreshToken() async {

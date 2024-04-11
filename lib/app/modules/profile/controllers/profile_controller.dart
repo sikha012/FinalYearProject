@@ -2,7 +2,10 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:happytails/app/components/customs/custom_button.dart';
+import 'package:happytails/app/data/provider/auth_services.dart';
 import 'package:happytails/app/modules/seller_main/controllers/seller_main_controller.dart';
+import 'package:happytails/app/routes/app_pages.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:happytails/app/components/customs/custom_snackbar.dart';
 import 'package:happytails/app/data/models/user_model.dart';
@@ -23,6 +26,7 @@ class ProfileController extends GetxController {
   var userType = MemoryManagement.getUserType();
 
   UserServices userServices = UserServices();
+  AuthService auth = AuthService();
   bool? isSeller;
   Rx<UserModel>? userDetail;
 
@@ -105,6 +109,71 @@ class ProfileController extends GetxController {
       debugPrint("Error in profile updation: $e");
       rethrow;
     }
+  }
+
+  void onSignOut() async {
+    showDialog(
+        context: Get.context!,
+        builder: (context) {
+          return Dialog(
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                vertical: 5,
+                horizontal: 15,
+              ),
+              width: 450,
+              height: 100,
+              child: Column(
+                children: [
+                  Text(
+                    "Are you sure you want to sign out?",
+                    style: TextStyle(
+                      fontSize: 19,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CustomButton(
+                        width: 50,
+                        height: 50,
+                        labelStyle: TextStyle(
+                          fontSize: 19,
+                          color: Colors.white,
+                        ),
+                        label: 'Yes',
+                        onPressed: () async {
+                          await auth.signOut();
+                          MemoryManagement.removeAll();
+                          Get.toNamed(Routes.SIGN_IN);
+                        },
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      CustomButton(
+                        width: 50,
+                        height: 50,
+                        labelStyle: TextStyle(
+                          fontSize: 19,
+                          color: Colors.white,
+                        ),
+                        label: 'No',
+                        onPressed: () {
+                          Get.back();
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   @override

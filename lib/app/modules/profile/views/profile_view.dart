@@ -13,7 +13,6 @@ import 'package:happytails/app/utils/asset_files.dart';
 import 'package:happytails/app/utils/constants.dart';
 import 'package:happytails/app/utils/memory_management.dart';
 import 'package:happytails/app/views/views/edit_profile_view.dart';
-import 'package:happytails/app/views/views/payment_summary_view.dart';
 import 'package:happytails/app/views/views/seller_orders_summary_view.dart';
 
 import '../controllers/profile_controller.dart';
@@ -389,8 +388,7 @@ class ProfileView extends GetView<ProfileController> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    MemoryManagement.removeAll();
-                    Get.offAllNamed(Routes.SIGN_IN);
+                    controller.onSignOut();
                   },
                   child: Text(
                     "LOG OUT",

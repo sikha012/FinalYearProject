@@ -55,49 +55,64 @@ class PetProfilesView extends GetView<PetProfilesController> {
                     ),
                   ],
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: controller.petProfiles.length,
-                    itemBuilder: (context, index) => SizedBox(
-                      height: 150,
-                      child: Stack(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Get.to(() => const PetProfileDetailView(),
-                                  arguments: {
-                                    'petProfile': controller.petProfiles[index],
-                                  });
-                            },
-                            child: PetProfileCard(
-                              petProfile: controller.petProfiles[index],
+                controller.petProfiles.isEmpty
+                    ? SizedBox(
+                        height: Get.height,
+                        child: Center(
+                          child: Text(
+                            "No Pet profiles added yet...",
+                            style: TextStyle(
+                              fontSize: 20,
                             ),
                           ),
-                          Positioned(
-                            right: 5,
-                            top: 50,
-                            child: GestureDetector(
-                              onTap: () {
-                                controller.showDeletePetProfileDialog(
-                                  controller.petProfiles[index].petId ?? 0,
-                                  controller.petProfiles[index].petName ?? '',
-                                );
-                              },
-                              child: const Icon(
-                                Icons.delete_forever,
-                                size: 30,
-                                color: Colors.red,
-                              ),
+                        ),
+                      )
+                    : Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.petProfiles.length,
+                          itemBuilder: (context, index) => SizedBox(
+                            height: 150,
+                            child: Stack(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.to(() => const PetProfileDetailView(),
+                                        arguments: {
+                                          'petProfile':
+                                              controller.petProfiles[index],
+                                        });
+                                  },
+                                  child: PetProfileCard(
+                                    petProfile: controller.petProfiles[index],
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 5,
+                                  top: 50,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      controller.showDeletePetProfileDialog(
+                                        controller.petProfiles[index].petId ??
+                                            0,
+                                        controller.petProfiles[index].petName ??
+                                            '',
+                                      );
+                                    },
+                                    child: const Icon(
+                                      Icons.delete_forever,
+                                      size: 30,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

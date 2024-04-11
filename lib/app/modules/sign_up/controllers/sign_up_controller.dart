@@ -36,19 +36,21 @@ class SignUpController extends GetxController {
           message: "Passwords don't match",
         );
       } else {
-        if (userNameController.text.split(' ').length >= 3) {
+        if (userNameController.text.split(' ').length >= 3 ||
+            userNameController.text.split(' ').length <= 1) {
           CustomSnackbar.errorSnackbar(
             context: Get.context,
-            title: 'Error',
-            message: "Invalid user name!",
+            title: 'Invalid user name!',
+            message: "Your name must be only two words",
           );
+          return;
         } else {
           try {
             isLoading.value = true;
             Map<String, dynamic> userData = {
               "username": userNameController.text,
               "email": emailController.text,
-              "token": MemoryManagement.getFCMToken() ?? "Null",
+              // "token": MemoryManagement.getFCMToken() ?? "Null",
               "password": passwordController.text,
               "location": addressController.text,
               "contact": contactController.text,
