@@ -197,19 +197,48 @@ class HomeView extends GetView<HomeController> {
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10,
                           ),
-                          itemBuilder: (context, index) => GestureDetector(
-                            onTap: () {
-                              Get.toNamed(
-                                Routes.PRODUCT_DETAIL,
-                                arguments: controller.products[index],
-                              );
-                            },
-                            child: SizedBox(
-                              width: 200,
-                              child: ProductCard(
-                                product: controller.products[index],
+                          itemBuilder: (context, index) => Stack(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Get.toNamed(
+                                    Routes.PRODUCT_DETAIL,
+                                    arguments: controller.products[index],
+                                  );
+                                },
+                                child: SizedBox(
+                                  width: 200,
+                                  child: ProductCard(
+                                    product: controller.products[index],
+                                  ),
+                                ),
                               ),
-                            ),
+                              controller.products[index]
+                                          .productstockQuantity! <=
+                                      0
+                                  ? Positioned(
+                                      bottom: 5,
+                                      right: 0,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(5),
+                                        decoration: const BoxDecoration(
+                                          color: Constants.tertiaryColor,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(20),
+                                            bottomLeft: Radius.circular(20),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          "OUT OF STOCK",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox.shrink(),
+                            ],
                           ),
                         ),
                 ),
@@ -231,9 +260,9 @@ class ProductSearchDelegate extends SearchDelegate {
   ThemeData appBarTheme(BuildContext context) {
     return ThemeData(
       primaryColor: Constants.primaryColor,
-      primaryIconTheme: IconThemeData(color: Colors.white),
-      textTheme: TextTheme(titleLarge: TextStyle(color: Colors.black)),
-      inputDecorationTheme: InputDecorationTheme(
+      primaryIconTheme: const IconThemeData(color: Colors.white),
+      textTheme: const TextTheme(titleLarge: TextStyle(color: Colors.black)),
+      inputDecorationTheme: const InputDecorationTheme(
         hintStyle: TextStyle(color: Colors.white),
       ),
     );

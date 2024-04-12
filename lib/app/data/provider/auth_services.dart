@@ -13,6 +13,8 @@ class AuthService extends ApiProvider {
     } on DioException catch (err) {
       if (err.response?.statusCode == 401) {
         return Future.error(err.response?.data['message']);
+      } else if (err.response?.statusCode == 404) {
+        return Future.error(err.response?.data['message']);
       } else if (err.response?.statusCode == 400) {
         return Future.error(err.response?.data['errors'][0]['message']);
       } else if (err.response?.statusCode == 500) {

@@ -12,7 +12,7 @@ Future<String?> getCurrentIp() async {
 }
 
 // var currentIpAddress = '${getCurrentIp()}:8001';
-var currentIpAddress = '172.25.4.3:8001';
+var currentIpAddress = '192.168.1.71:8001';
 
 var baseUrlLink = 'http://$currentIpAddress';
 

@@ -7,6 +7,7 @@ import 'package:happytails/app/data/models/cart_product.dart';
 import 'package:happytails/app/data/models/order.dart';
 import 'package:happytails/app/data/models/product.dart';
 import 'package:happytails/app/data/provider/order_services.dart';
+import 'package:happytails/app/modules/home/controllers/home_controller.dart';
 import 'package:happytails/app/modules/main/views/main_view.dart';
 import 'package:happytails/app/utils/memory_management.dart';
 import 'package:happytails/app/views/views/order_detail_view.dart';
@@ -76,7 +77,16 @@ class UserCartController extends GetxController {
     );
   }
 
-  void increaseProductQuantity(int index) {
+  void increaseProductQuantity(int index, Product product) {
+    if (product.productstockQuantity! <= cartProducts[index].productQuantity) {
+      CustomSnackbar.errorSnackbar(
+        context: Get.context,
+        title: 'Limited quantity in stock',
+        message:
+            'The desired quantity cannot be selected due to limited quantity in stock',
+      );
+      return;
+    }
     cartProducts[index].productQuantity++;
     saveCartProducts();
     updateCartTotal();
@@ -252,6 +262,7 @@ class UserCartController extends GetxController {
         selectedCartProducts.clear();
         saveCartProducts();
         updateCartTotal();
+        Get.find<HomeController>().getProducts();
         Get.to(() => const MainView());
         update();
       }).onError((error, stackTrace) {

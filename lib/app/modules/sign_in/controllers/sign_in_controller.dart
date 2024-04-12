@@ -80,7 +80,7 @@ class SignInController extends GetxController {
 
           CustomSnackbar.errorSnackbar(
             context: Get.context,
-            title: "Error",
+            title: 'Invalid Credentials',
             message: error.toString(),
           );
         });

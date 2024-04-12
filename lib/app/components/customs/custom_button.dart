@@ -9,6 +9,7 @@ class CustomButton extends StatelessWidget {
   final double? height;
   final EdgeInsetsGeometry? padding;
   final bool? disableBorder;
+  final bool? isDisabled;
   const CustomButton({
     super.key,
     required this.label,
@@ -19,6 +20,7 @@ class CustomButton extends StatelessWidget {
     this.height,
     this.padding,
     this.disableBorder = false,
+    this.isDisabled = false,
   });
 
   @override
@@ -26,7 +28,7 @@ class CustomButton extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(25),
       mouseCursor: MaterialStateMouseCursor.clickable,
-      onTap: onPressed,
+      onTap: !isDisabled! ? onPressed : () {},
       child: Container(
         width: width ?? 300,
         height: height ?? 50,
@@ -46,7 +48,7 @@ class CustomButton extends StatelessWidget {
               blurRadius: 25,
             ),
           ],
-          color: color ?? const Color(0xFFFFA500),
+          color: isDisabled! ? Colors.grey : color ?? const Color(0xFFFFA500),
         ),
         child: Center(
           child: Text(

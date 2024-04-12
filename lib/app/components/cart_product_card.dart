@@ -81,7 +81,10 @@ class CartProductCard extends StatelessWidget {
                           ),
                           IconButton(
                             onPressed: () {
-                              controller.increaseProductQuantity(index);
+                              controller.increaseProductQuantity(
+                                index,
+                                cartProduct.product,
+                              );
                             },
                             icon: const Icon(Icons.add),
                           ),

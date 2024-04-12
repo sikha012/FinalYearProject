@@ -41,7 +41,7 @@ class SignUpController extends GetxController {
           CustomSnackbar.errorSnackbar(
             context: Get.context,
             title: 'Invalid user name!',
-            message: "Your name must be only two words",
+            message: "Your name must be two words",
           );
           return;
         } else {
