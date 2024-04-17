@@ -59,17 +59,16 @@ class SignUpView extends GetView<SignUpController> {
                         CustomTextfield(
                           controller: controller.emailController,
                           label: "Email",
-                          validator: (value) {
-                            Pattern pattern =
-                                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-
-                            RegExp regex = RegExp(pattern as String);
-                            if (!regex.hasMatch(value ?? '')) {
-                              return 'Please enter a valid email';
-                            } else {
-                              return null;
-                            }
-                          },
+                          // validator: (value) {
+                          //   Pattern pattern =
+                          //       r'^(([^<>()[]\.,;:\s@"]+(.[^<>()[]\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$';
+                          //   RegExp regex = RegExp(pattern as String);
+                          //   if (!regex.hasMatch(value ?? '')) {
+                          //     return 'Please enter a valid email';
+                          //   } else {
+                          //     return null;
+                          //   }
+                          // },
                         ),
                         SizedBox(
                           height: 20,
@@ -193,7 +192,7 @@ class SignUpView extends GetView<SignUpController> {
                                 CustomSnackbar.errorSnackbar(
                                   context: Get.context,
                                   title: 'Invalid user name!',
-                                  message: "Your name must be two words",
+                                  message: "Your name must be only two words",
                                 );
                                 return;
                               }
