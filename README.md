@@ -1,6 +1,6 @@
 # happytails
 
-A new Flutter project.
+Final Year Porject of HappyTails with the flutter in frontened.
 
 ## Getting Started
 
